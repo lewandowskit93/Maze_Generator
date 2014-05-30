@@ -24,6 +24,7 @@ public class DirectionTest {
 		assertNotNull(Direction.valueOf(direction));
 	}
 	
+	@SuppressWarnings("unused")
 	private static final Object[] getDirectionsWithItsOrdinals(){
 		return new Object[]{
 				new Object[]{"NORTH", 0},
@@ -39,6 +40,7 @@ public class DirectionTest {
 		assertEquals(ordinal,Direction.valueOf(direction).ordinal());
 	}
 	
+	@SuppressWarnings("unused")
 	private static final Object[] getValidDirectionCombinations(){
 		return new Object[]{
 				new Object[]{0,EnumSet.noneOf(Direction.class)},
@@ -66,6 +68,7 @@ public class DirectionTest {
 		assertEquals(representation,Direction.getFromIntValue(i));
 	}
 	
+	@SuppressWarnings("unused")
 	private static final Object[] getInvalidDirectionIntegerRepresentations(){
 		return new Object[]{-1,-2,-4,-8,-16,-17,-32,16,17,32};
 	}
@@ -76,6 +79,7 @@ public class DirectionTest {
 		Direction.getFromIntValue(value);
 	}
 	
+	@SuppressWarnings("unused")
 	private static final Object[] getDirectionsWithValues(){
 		return new Object[]{
 				new Object[]{"NORTH", 1},
