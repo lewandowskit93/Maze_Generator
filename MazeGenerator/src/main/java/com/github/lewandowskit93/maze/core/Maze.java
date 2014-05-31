@@ -58,4 +58,12 @@ public class Maze {
 		if(x<0 || x>=width || y<0 || y>=height)throw new InvalidCellCoordinatesException(x,y);
 		return cells[y][x];
 	}
+
+	public void surroundCell(int x, int y) {
+		getCell(x, y).surround();
+	}
+
+	public void clearCell(int x, int y) {
+		getCell(x, y).clear();
+	}
 }

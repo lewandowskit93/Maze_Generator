@@ -7,6 +7,8 @@ import junitparams.Parameters;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import static org.mockito.Mockito.*;
+
 @RunWith(JUnitParamsRunner.class)
 public class MazeCellsTest {
 
@@ -95,4 +97,75 @@ public class MazeCellsTest {
 		maze.getCell(x, y);
 	}
 	
+	@SuppressWarnings("unused")
+	private static final Object[] getSizeAndCellsMocksWithValidCoordinates(){
+		Cell[][] cells = new Cell[][]{
+			{mock(Cell.class),mock(Cell.class), mock(Cell.class)},
+			{mock(Cell.class),mock(Cell.class), mock(Cell.class)},
+			{mock(Cell.class),mock(Cell.class), mock(Cell.class)}
+		};
+		return new Object[]{
+				new Object[]{3,3, cells, 0, 0},
+				new Object[]{3,3, cells, 1, 0},
+				new Object[]{3,3, cells, 2, 0},
+				new Object[]{3,3, cells, 0, 1},
+				new Object[]{3,3, cells, 1, 1},
+				new Object[]{3,3, cells, 2, 1},
+				new Object[]{3,3, cells, 0, 2},
+				new Object[]{3,3, cells, 1, 2},
+				new Object[]{3,3, cells, 2, 2}
+		};
+	}
+	
+	@Test
+	@Parameters(method = "getSizeAndCellsMocksWithValidCoordinates")
+	public void shouldBeAbleToSurroundCell(int width, int height, Cell[][] cellsMocks, int x, int y){
+		Maze maze = new Maze(width,height,cellsMocks);
+		maze.surroundCell(x,y);
+		verify(cellsMocks[y][x]).surround();
+	}
+	
+	@SuppressWarnings("unused")
+	private static final Object[] getSizeAndCellsMocksWithInvalidCoordinates(){
+		Cell[][] cells = new Cell[][]{
+			{mock(Cell.class),mock(Cell.class), mock(Cell.class)},
+			{mock(Cell.class),mock(Cell.class), mock(Cell.class)},
+			{mock(Cell.class),mock(Cell.class), mock(Cell.class)}
+		};
+		return new Object[]{
+				new Object[]{3,3, cells, -1, 0},
+				new Object[]{3,3, cells, 0, -1},
+				new Object[]{3,3, cells, -1, -1},
+				new Object[]{3,3, cells, -12, -9},
+				new Object[]{3,3, cells, 2, 3},
+				new Object[]{3,3, cells, 3, 1},
+				new Object[]{3,3, cells, 3, 2},
+				new Object[]{3,3, cells, 4, 2},
+				new Object[]{3,3, cells, 2, 4},
+				new Object[]{3,3, cells, 3, 3},
+				new Object[]{3,3, cells, 7, 8}
+		};
+	}
+	
+	@Test(expected = InvalidCellCoordinatesException.class)
+	@Parameters(method = "getSizeAndCellsMocksWithInvalidCoordinates")
+	public void shouldBeUnableToSurroundCell(int width, int height, Cell[][] cellsMocks, int x, int y){
+		Maze maze = new Maze(width,height,cellsMocks);
+		maze.surroundCell(x,y);
+	}
+	
+	@Test
+	@Parameters(method = "getSizeAndCellsMocksWithValidCoordinates")
+	public void shouldBeAbleToClearCell(int width, int height, Cell[][] cellsMocks, int x, int y){
+		Maze maze = new Maze(width,height,cellsMocks);
+		maze.clearCell(x, y);
+		verify(cellsMocks[y][x]).clear();
+	}
+	
+	@Test(expected = InvalidCellCoordinatesException.class)
+	@Parameters(method = "getSizeAndCellsMocksWithInvalidCoordinates")
+	public void shouldBeUnableToClearCell(int width, int height, Cell[][] cellsMocks, int x, int y){
+		Maze maze = new Maze(width,height,cellsMocks);
+		maze.clearCell(x, y);
+	}
 }
