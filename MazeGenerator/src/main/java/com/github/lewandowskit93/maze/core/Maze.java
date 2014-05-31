@@ -59,11 +59,11 @@ public class Maze {
 		return cells[y][x];
 	}
 
-	public void surroundCell(int x, int y) {
+	public void surroundCell(int x, int y) throws InvalidCellCoordinatesException{
 		getCell(x, y).surround();
 	}
 
-	public void clearCell(int x, int y) {
+	public void clearCell(int x, int y) throws InvalidCellCoordinatesException{
 		getCell(x, y).clear();
 	}
 }
