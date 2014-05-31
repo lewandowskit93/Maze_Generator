@@ -971,7 +971,7 @@ public class MazeCellsTest {
 	public void shouldBeConnected(Direction direction){
 		Cell[][] cells = getCellMocks();
 		Maze maze = new Maze(3,3,cells);
-		when(cells[1][1].hasWall(direction)).thenReturn(true);
+		when(cells[1][1].hasWall(direction)).thenReturn(false);
 		assertTrue(maze.isConnected(1,1,direction));
 	}
 	
@@ -980,7 +980,7 @@ public class MazeCellsTest {
 	public void shouldNotBeConnected(Direction direction){
 		Cell[][] cells = getCellMocks();
 		Maze maze = new Maze(3,3,cells);
-		when(cells[1][1].hasWall(direction)).thenReturn(false);
+		when(cells[1][1].hasWall(direction)).thenReturn(true);
 		assertFalse(maze.isConnected(1,1,direction));
 	}
 	
@@ -989,5 +989,107 @@ public class MazeCellsTest {
 	public void shouldBeUnableToCheckIfCellIsConnected(int width, int height, Cell[][] cells, int x, int y){
 		Maze maze = new Maze(width,height,cells);
 		maze.isConnected(x,y,Direction.NORTH);
+	}
+	
+	@Test
+	@Parameters(method = "getSizeAndCellsWithValidCoordinates")
+	public void shouldHaveNoConnectedNeighbours(int width,int height,Cell[][] cells, int x, int y){
+		Maze maze = new Maze(width,height,cells);
+		assertEquals(EnumSet.noneOf(Direction.class),maze.getConnectedNeighbours(x,y));
+	}
+	
+	@SuppressWarnings("unused")
+	private static final Object[] getSizeAndCellsWithValidCoordinatesAndConnectedNeighbours(){
+		Cell[][] cells = new Cell[][]{
+			{new Cell(EnumSet.noneOf(Direction.class)),new Cell(EnumSet.noneOf(Direction.class)), new Cell(EnumSet.noneOf(Direction.class))},
+			{new Cell(EnumSet.noneOf(Direction.class)),new Cell(EnumSet.noneOf(Direction.class)), new Cell(EnumSet.noneOf(Direction.class))},
+			{new Cell(EnumSet.noneOf(Direction.class)),new Cell(EnumSet.noneOf(Direction.class)), new Cell(EnumSet.noneOf(Direction.class))}
+		};
+		return new Object[]{
+				new Object[]{3,3, cells, 0, 0, EnumSet.of(Direction.SOUTH,Direction.EAST)},
+				new Object[]{3,3, cells, 1, 0, EnumSet.of(Direction.SOUTH,Direction.EAST, Direction.WEST)},
+				new Object[]{3,3, cells, 2, 0, EnumSet.of(Direction.SOUTH,Direction.WEST)},
+				new Object[]{3,3, cells, 0, 1, EnumSet.of(Direction.SOUTH,Direction.EAST, Direction.NORTH)},
+				new Object[]{3,3, cells, 1, 1, EnumSet.of(Direction.SOUTH,Direction.EAST, Direction.WEST, Direction.NORTH)},
+				new Object[]{3,3, cells, 2, 1, EnumSet.of(Direction.SOUTH, Direction.WEST, Direction.NORTH)},
+				new Object[]{3,3, cells, 0, 2, EnumSet.of(Direction.EAST, Direction.NORTH)},
+				new Object[]{3,3, cells, 1, 2, EnumSet.of(Direction.EAST, Direction.WEST, Direction.NORTH)},
+				new Object[]{3,3, cells, 2, 2, EnumSet.of(Direction.WEST, Direction.NORTH)}
+		};
+	}
+	
+	@Test
+	@Parameters(method = "getSizeAndCellsWithValidCoordinatesAndConnectedNeighbours")
+	public void shouldHaveConnectedNeighbours(int width,int height,Cell[][] cells, int x, int y, EnumSet<Direction> neighbours){
+		Maze maze = new Maze(width, height, cells);
+		assertEquals(neighbours,maze.getConnectedNeighbours(x, y));
+	}
+	
+	@Test(expected = InvalidCellCoordinatesException.class)
+	@Parameters(method = "getSizeAndCellsWithInvalidCoordinates")
+	public void shouldBeUnableToGetConnectedNeighbours(int width, int height, Cell[][] cells, int x, int y){
+		Maze maze = new Maze(width,height,cells);
+		maze.getConnectedNeighbours(x, y);
+	}
+	
+	@SuppressWarnings("unused")
+	private static final Object[] getSizeAndCellsWithValidCoordinatesWithAllConnectedNeighbours(){
+		Cell[][] cells = new Cell[][]{
+			{new Cell(EnumSet.noneOf(Direction.class)),new Cell(EnumSet.noneOf(Direction.class)), new Cell(EnumSet.noneOf(Direction.class))},
+			{new Cell(EnumSet.noneOf(Direction.class)),new Cell(EnumSet.noneOf(Direction.class)), new Cell(EnumSet.noneOf(Direction.class))},
+			{new Cell(EnumSet.noneOf(Direction.class)),new Cell(EnumSet.noneOf(Direction.class)), new Cell(EnumSet.noneOf(Direction.class))}
+		};
+		return new Object[]{
+				new Object[]{3,3, cells, 0, 0},
+				new Object[]{3,3, cells, 1, 0},
+				new Object[]{3,3, cells, 2, 0},
+				new Object[]{3,3, cells, 0, 1},
+				new Object[]{3,3, cells, 1, 1},
+				new Object[]{3,3, cells, 2, 1},
+				new Object[]{3,3, cells, 0, 2},
+				new Object[]{3,3, cells, 1, 2},
+				new Object[]{3,3, cells, 2, 2}
+		};
+	}
+	
+	@SuppressWarnings("unused")
+	private static final Object[] getSizeAndCellsWithValidCoordinatesAndDisconnectedNeighbours(){
+		Cell[][] cells = new Cell[][]{
+			{new Cell(),new Cell(), new Cell()},
+			{new Cell(),new Cell(), new Cell()},
+			{new Cell(),new Cell(), new Cell()}
+		};
+		return new Object[]{
+				new Object[]{3,3, cells, 0, 0, EnumSet.of(Direction.SOUTH,Direction.EAST)},
+				new Object[]{3,3, cells, 1, 0, EnumSet.of(Direction.SOUTH,Direction.EAST, Direction.WEST)},
+				new Object[]{3,3, cells, 2, 0, EnumSet.of(Direction.SOUTH,Direction.WEST)},
+				new Object[]{3,3, cells, 0, 1, EnumSet.of(Direction.SOUTH,Direction.EAST, Direction.NORTH)},
+				new Object[]{3,3, cells, 1, 1, EnumSet.of(Direction.SOUTH,Direction.EAST, Direction.WEST, Direction.NORTH)},
+				new Object[]{3,3, cells, 2, 1, EnumSet.of(Direction.SOUTH, Direction.WEST, Direction.NORTH)},
+				new Object[]{3,3, cells, 0, 2, EnumSet.of(Direction.EAST, Direction.NORTH)},
+				new Object[]{3,3, cells, 1, 2, EnumSet.of(Direction.EAST, Direction.WEST, Direction.NORTH)},
+				new Object[]{3,3, cells, 2, 2, EnumSet.of(Direction.WEST, Direction.NORTH)}
+		};
+	}
+	
+	@Test
+	@Parameters(method = "getSizeAndCellsWithValidCoordinatesWithAllConnectedNeighbours")
+	public void shouldHaveNoDisconnectedNeighbours(int width,int height,Cell[][] cells, int x, int y){
+		Maze maze = new Maze(width,height,cells);
+		assertEquals(EnumSet.noneOf(Direction.class),maze.getDisconnectedNeighbours(x,y));
+	}
+	
+	@Test
+	@Parameters(method = "getSizeAndCellsWithValidCoordinatesAndDisconnectedNeighbours")
+	public void shouldHaveDisconnectedNeighbours(int width, int height,Cell[][] cells, int x, int y, EnumSet<Direction> disconnectedNeighbours){
+		Maze maze = new Maze(width,height,cells);
+		assertEquals(disconnectedNeighbours,maze.getDisconnectedNeighbours(x, y));
+	}
+	
+	@Test(expected = InvalidCellCoordinatesException.class)
+	@Parameters(method = "getSizeAndCellsWithInvalidCoordinates")
+	public void shouldBeUnableToGetDisconnectedNeighbours(int width, int height, Cell[][] cells, int x, int y){
+		Maze maze = new Maze(width,height,cells);
+		maze.getDisconnectedNeighbours(x, y);
 	}
 }

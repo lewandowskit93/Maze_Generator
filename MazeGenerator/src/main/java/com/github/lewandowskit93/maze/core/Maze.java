@@ -181,6 +181,24 @@ public class Maze {
 	}
 
 	public boolean isConnected(int x, int y, Direction direction) {
-		return getCell(x,y).hasWall(direction);
+		return !getCell(x,y).hasWall(direction);
+	}
+
+	public EnumSet<Direction> getConnectedNeighbours(int x, int y) throws InvalidCellCoordinatesException{
+		EnumSet<Direction> neighbours = getNeighbours(x, y);
+		EnumSet<Direction> connectedNeighbours = EnumSet.noneOf(Direction.class);
+		for(Direction neighbour : neighbours){
+			if(isConnected(x, y, neighbour))connectedNeighbours.add(neighbour);
+		}
+		return connectedNeighbours;
+	}
+
+	public EnumSet<Direction> getDisconnectedNeighbours(int x, int y) throws InvalidCellCoordinatesException{
+		EnumSet<Direction> neighbours = getNeighbours(x, y);
+		EnumSet<Direction> connectedNeighbours = EnumSet.noneOf(Direction.class);
+		for(Direction neighbour : neighbours){
+			if(!isConnected(x, y, neighbour))connectedNeighbours.add(neighbour);
+		}
+		return connectedNeighbours;
 	}
 }
