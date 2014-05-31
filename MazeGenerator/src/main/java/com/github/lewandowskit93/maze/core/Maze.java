@@ -66,4 +66,48 @@ public class Maze {
 	public void clearCell(int x, int y) throws InvalidCellCoordinatesException{
 		getCell(x, y).clear();
 	}
+
+	public boolean hasNeighbour(int x, int y, Direction direction) throws InvalidCellCoordinatesException{
+		switch(direction){
+			case NORTH:{
+				return hasNorthNeighbour(x, y);
+			}
+			case EAST:{
+				return hasEastNeighbour(x, y);
+			}
+			case SOUTH:{
+				return hasSouthNeighbour(x, y);
+			}
+			case WEST:{
+				return hasWestNeighbour(x, y);
+			}
+			default:{
+				return false;
+			}
+		}
+	}
+
+	public boolean hasNorthNeighbour(int x, int y) throws InvalidCellCoordinatesException{
+		if(y<0 || y>=height  || x<0 || x>=width)throw new InvalidCellCoordinatesException(x, y);
+		if(y>0)return true;
+		else return false;
+	}
+
+	public boolean hasSouthNeighbour(int x, int y) throws InvalidCellCoordinatesException{
+		if(y<0 || y>=height  || x<0 || x>=width)throw new InvalidCellCoordinatesException(x, y);
+		if(y<(height-1)) return true;
+		else return false;
+	}
+
+	public boolean hasEastNeighbour(int x, int y) throws InvalidCellCoordinatesException{
+		if(y<0 || y>=height  || x<0 || x>=width)throw new InvalidCellCoordinatesException(x, y);
+		if(x<(width-1))return true;
+		else return false;
+	}
+
+	public boolean hasWestNeighbour(int x, int y) throws InvalidCellCoordinatesException{
+		if(y<0 || y>=height  || x<0 || x>=width)throw new InvalidCellCoordinatesException(x, y);
+		if(x>0)return true;
+		else return false;
+	}
 }

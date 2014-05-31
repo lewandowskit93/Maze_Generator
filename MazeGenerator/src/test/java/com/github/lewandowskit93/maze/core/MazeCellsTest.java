@@ -168,4 +168,268 @@ public class MazeCellsTest {
 		Maze maze = new Maze(width,height,cellsMocks);
 		maze.clearCell(x, y);
 	}
+	
+	@SuppressWarnings("unused")
+	private static final Object[] getCellsWithNorthNeighbour(){
+		Cell[][] cells = new Cell[][]{
+				{new Cell(),new Cell(), new Cell()},
+				{new Cell(),new Cell(), new Cell()},
+				{new Cell(),new Cell(), new Cell()},
+				{new Cell(),new Cell(), new Cell()}
+			};
+		return new Object[]{
+					new Object[]{3,4, cells, 0, 1},
+					new Object[]{3,4, cells, 1, 1},
+					new Object[]{3,4, cells, 2, 1},
+					new Object[]{3,4, cells, 0, 2},
+					new Object[]{3,4, cells, 1, 2},
+					new Object[]{3,4, cells, 2, 2},
+					new Object[]{3,4, cells, 0, 3},
+					new Object[]{3,4, cells, 1, 3},
+					new Object[]{3,4, cells, 2, 3}
+		};
+	}
+	
+	@Test
+	@Parameters(method = "getCellsWithNorthNeighbour")
+	public void cellShouldHaveNorthNeighbour(int width, int height, Cell[][] cells, int x, int y){
+		Maze maze = new Maze(width,height,cells);
+		assertTrue(maze.hasNeighbour(x,y,Direction.NORTH));
+		assertTrue(maze.hasNorthNeighbour(x,y));
+	}
+	
+	@SuppressWarnings("unused")
+	private static final Object[] getCellsWithoutNorthNeighbour(){
+		Cell[][] cells = new Cell[][]{
+				{new Cell(),new Cell(), new Cell()},
+				{new Cell(),new Cell(), new Cell()},
+				{new Cell(),new Cell(), new Cell()},
+				{new Cell(),new Cell(), new Cell()}
+			};
+		return new Object[]{
+				new Object[]{3,4, cells, 0, 0},
+				new Object[]{3,4, cells, 1, 0},
+				new Object[]{3,4, cells, 2, 0}
+		};
+	}
+	
+	@Test
+	@Parameters(method = "getCellsWithoutNorthNeighbour")
+	public void cellShouldNotHaveNorthNeighbour(int width, int height, Cell[][] cells, int x, int y){
+		Maze maze = new Maze(width,height,cells);
+		assertFalse(maze.hasNeighbour(x,y,Direction.NORTH));
+		assertFalse(maze.hasNorthNeighbour(x, y));
+	}
+	
+	@Test(expected = InvalidCellCoordinatesException.class)
+	@Parameters(method = "getSizeAndCellsWithInvalidCoordinates")
+	public void shouldNotBeAbleToCheckIfCellHasNorthNeighbour(int width, int height, Cell[][] cells, int x, int y){
+		Maze maze = new Maze(width,height,cells);
+		maze.hasNeighbour(x, y, Direction.NORTH);
+	}
+	
+	@Test(expected = InvalidCellCoordinatesException.class)
+	@Parameters(method = "getSizeAndCellsWithInvalidCoordinates")
+	public void shouldNotBeAbleToCheckIfCellHasNorthNeighbour2(int width, int height, Cell[][] cells, int x, int y){
+		Maze maze = new Maze(width,height,cells);
+		maze.hasNorthNeighbour(x, y);
+	}
+	
+	@SuppressWarnings("unused")
+	private static final Object[] getCellsWithSouthNeighbour(){
+		Cell[][] cells = new Cell[][]{
+				{new Cell(),new Cell(), new Cell()},
+				{new Cell(),new Cell(), new Cell()},
+				{new Cell(),new Cell(), new Cell()},
+				{new Cell(),new Cell(), new Cell()}
+		};
+		return new Object[]{
+				new Object[]{3,4, cells, 0, 0},
+				new Object[]{3,4, cells, 1, 0},
+				new Object[]{3,4, cells, 2, 0},
+				new Object[]{3,4, cells, 0, 1},
+				new Object[]{3,4, cells, 1, 1},
+				new Object[]{3,4, cells, 2, 1},
+				new Object[]{3,4, cells, 0, 2},
+				new Object[]{3,4, cells, 1, 2},
+				new Object[]{3,4, cells, 2, 2}
+		};
+	}
+	
+	@Test
+	@Parameters(method = "getCellsWithSouthNeighbour")
+	public void cellShouldHaveSouthNeighbour(int width, int height, Cell[][] cells, int x, int y){
+		Maze maze = new Maze(width,height,cells);
+		assertTrue(maze.hasNeighbour(x,y,Direction.SOUTH));
+		assertTrue(maze.hasSouthNeighbour(x,y));
+	}
+	
+	@SuppressWarnings("unused")
+	private static final Object[] getCellsWithoutSouthNeighbour(){
+		Cell[][] cells = new Cell[][]{
+			{new Cell(),new Cell(), new Cell()},
+			{new Cell(),new Cell(), new Cell()},
+			{new Cell(),new Cell(), new Cell()},
+			{new Cell(),new Cell(), new Cell()}
+		};
+		return new Object[]{
+				new Object[]{3,4, cells, 0, 3},
+				new Object[]{3,4, cells, 1, 3},
+				new Object[]{3,4, cells, 2, 3}
+		};
+	}
+	
+	@Test
+	@Parameters(method = "getCellsWithoutSouthNeighbour")
+	public void cellShouldNotHaveSouthNeighbour(int width, int height, Cell[][] cells, int x, int y){
+		Maze maze = new Maze(width,height,cells);
+		assertFalse(maze.hasNeighbour(x,y,Direction.SOUTH));
+		assertFalse(maze.hasSouthNeighbour(x,y));
+	}
+	
+	@Test(expected = InvalidCellCoordinatesException.class)
+	@Parameters(method = "getSizeAndCellsWithInvalidCoordinates")
+	public void shouldNotBeAbleToCheckIfCellHasSouthNeighbour(int width, int height, Cell[][] cells, int x, int y){
+		Maze maze = new Maze(width,height,cells);
+		maze.hasNeighbour(x, y, Direction.SOUTH);
+	}
+	
+	@Test(expected = InvalidCellCoordinatesException.class)
+	@Parameters(method = "getSizeAndCellsWithInvalidCoordinates")
+	public void shouldNotBeAbleToCheckIfCellHasSouthNeighbour2(int width, int height, Cell[][] cells, int x, int y){
+		Maze maze = new Maze(width,height,cells);
+		maze.hasSouthNeighbour(x,y);
+	}
+	
+	@SuppressWarnings("unused")
+	private static final Object[] getCellsWithEastNeighbour(){
+		Cell[][] cells = new Cell[][]{
+				{new Cell(),new Cell(), new Cell()},
+				{new Cell(),new Cell(), new Cell()},
+				{new Cell(),new Cell(), new Cell()},
+				{new Cell(),new Cell(), new Cell()}
+			};
+		return new Object[]{
+				new Object[]{3,4, cells, 0, 0},
+				new Object[]{3,4, cells, 1, 0},
+				new Object[]{3,4, cells, 0, 1},
+				new Object[]{3,4, cells, 1, 1},
+				new Object[]{3,4, cells, 0, 2},
+				new Object[]{3,4, cells, 1, 2},
+				new Object[]{3,4, cells, 0, 3},
+				new Object[]{3,4, cells, 1, 3}
+		};
+	}
+	
+	@Test
+	@Parameters(method = "getCellsWithEastNeighbour")
+	public void cellShouldHaveEasthNeighbour(int width, int height, Cell[][] cells, int x, int y){
+		Maze maze = new Maze(width,height,cells);
+		assertTrue(maze.hasNeighbour(x,y,Direction.EAST));
+		assertTrue(maze.hasEastNeighbour(x,y));
+	}
+	
+	@SuppressWarnings("unused")
+	private static final Object[] getCellsWithoutEastNeighbour(){
+		Cell[][] cells = new Cell[][]{
+				{new Cell(),new Cell(), new Cell()},
+				{new Cell(),new Cell(), new Cell()},
+				{new Cell(),new Cell(), new Cell()},
+				{new Cell(),new Cell(), new Cell()}
+			};
+		return new Object[]{
+				new Object[]{3,4, cells, 2, 0},
+				new Object[]{3,4, cells, 2, 1},
+				new Object[]{3,4, cells, 2, 2},
+				new Object[]{3,4, cells, 2, 3}
+		};
+	}
+	
+	@Test
+	@Parameters(method = "getCellsWithoutEastNeighbour")
+	public void cellShouldNotHaveEastNeighbour(int width, int height, Cell[][] cells, int x, int y){
+		Maze maze = new Maze(width,height,cells);
+		assertFalse(maze.hasNeighbour(x,y,Direction.EAST));
+		assertFalse(maze.hasEastNeighbour(x,y));
+	}
+	
+	@Test(expected = InvalidCellCoordinatesException.class)
+	@Parameters(method = "getSizeAndCellsWithInvalidCoordinates")
+	public void shouldNotBeAbleToCheckIfCellHasEastNeighbour(int width, int height, Cell[][] cells, int x, int y){
+		Maze maze = new Maze(width,height,cells);
+		maze.hasNeighbour(x, y, Direction.EAST);
+	}
+	
+	@Test(expected = InvalidCellCoordinatesException.class)
+	@Parameters(method = "getSizeAndCellsWithInvalidCoordinates")
+	public void shouldNotBeAbleToCheckIfCellHasEastNeighbour2(int width, int height, Cell[][] cells, int x, int y){
+		Maze maze = new Maze(width,height,cells);
+		maze.hasEastNeighbour(x, y);
+	}
+	
+	@SuppressWarnings("unused")
+	private static final Object[] getCellsWithWestNeighbour(){
+		Cell[][] cells = new Cell[][]{
+				{new Cell(),new Cell(), new Cell()},
+				{new Cell(),new Cell(), new Cell()},
+				{new Cell(),new Cell(), new Cell()},
+				{new Cell(),new Cell(), new Cell()}
+		};
+		return new Object[]{
+				new Object[]{3,4, cells, 1, 0},
+				new Object[]{3,4, cells, 2, 0},
+				new Object[]{3,4, cells, 1, 1},
+				new Object[]{3,4, cells, 2, 1},
+				new Object[]{3,4, cells, 1, 2},
+				new Object[]{3,4, cells, 2, 2},
+				new Object[]{3,4, cells, 1, 3},
+				new Object[]{3,4, cells, 2, 3}
+		};
+	}
+	
+	@Test
+	@Parameters(method = "getCellsWithWestNeighbour")
+	public void cellShouldHaveWestNeighbour(int width, int height, Cell[][] cells, int x, int y){
+		Maze maze = new Maze(width,height,cells);
+		assertTrue(maze.hasNeighbour(x,y,Direction.WEST));
+		assertTrue(maze.hasWestNeighbour(x,y));
+	}
+	
+	@SuppressWarnings("unused")
+	private static final Object[] getCellsWithoutWestNeighbour(){
+		Cell[][] cells = new Cell[][]{
+			{new Cell(),new Cell(), new Cell()},
+			{new Cell(),new Cell(), new Cell()},
+			{new Cell(),new Cell(), new Cell()},
+			{new Cell(),new Cell(), new Cell()}
+		};
+		return new Object[]{
+				new Object[]{3,4, cells, 0, 0},
+				new Object[]{3,4, cells, 0, 1},
+				new Object[]{3,4, cells, 0, 2},
+				new Object[]{3,4, cells, 0, 3},
+		};
+	}
+	
+	@Test
+	@Parameters(method = "getCellsWithoutWestNeighbour")
+	public void cellShouldNotHaveWestNeighbour(int width, int height, Cell[][] cells, int x, int y){
+		Maze maze = new Maze(width,height,cells);
+		assertFalse(maze.hasNeighbour(x,y,Direction.WEST));
+		assertFalse(maze.hasWestNeighbour(x,y));
+	}
+	
+	@Test(expected = InvalidCellCoordinatesException.class)
+	@Parameters(method = "getSizeAndCellsWithInvalidCoordinates")
+	public void shouldNotBeAbleToCheckIfCellHasWestNeighbour(int width, int height, Cell[][] cells, int x, int y){
+		Maze maze = new Maze(width,height,cells);
+		maze.hasNeighbour(x, y, Direction.WEST);
+	}
+	
+	@Test(expected = InvalidCellCoordinatesException.class)
+	@Parameters(method = "getSizeAndCellsWithInvalidCoordinates")
+	public void shouldNotBeAbleToCheckIfCellHasWestNeighbour2(int width, int height, Cell[][] cells, int x, int y){
+		Maze maze = new Maze(width,height,cells);
+		maze.hasWestNeighbour(x,y);
+	}
 }
