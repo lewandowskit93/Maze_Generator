@@ -1,5 +1,7 @@
 package com.github.lewandowskit93.maze.core;
 
+import java.util.EnumSet;
+
 public class Maze {
 
 	private int width,height;
@@ -168,5 +170,13 @@ public class Maze {
 				}
 			}
 		}
+	}
+
+	public EnumSet<Direction> getNeighbours(int x, int y) throws InvalidCellCoordinatesException{
+		EnumSet<Direction> neighbours = EnumSet.noneOf(Direction.class);
+		for(Direction direction : EnumSet.allOf(Direction.class)){
+			if(hasNeighbour(x, y, direction))neighbours.add(direction);
+		}
+		return neighbours;
 	}
 }

@@ -1,6 +1,9 @@
 package com.github.lewandowskit93.maze.core;
 
 import static org.junit.Assert.*;
+
+import java.util.EnumSet;
+
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
 
@@ -922,5 +925,39 @@ public class MazeCellsTest {
 		Maze maze = spy(new Maze(3,3,cellMocks));
 		doThrow(new InvalidCellCoordinatesException()).when(maze).getCell(1, 1);
 		maze.addWall(1,1,Direction.WEST);
+	}
+	
+	@SuppressWarnings("unused")
+	private static final Object[] getSizeAndCellsWithValidCoordinatesAndNeighbours(){
+		Cell[][] cells = new Cell[][]{
+			{new Cell(),new Cell(), new Cell()},
+			{new Cell(),new Cell(), new Cell()},
+			{new Cell(),new Cell(), new Cell()}
+		};
+		return new Object[]{
+				new Object[]{3,3, cells, 0, 0, EnumSet.of(Direction.SOUTH,Direction.EAST)},
+				new Object[]{3,3, cells, 1, 0, EnumSet.of(Direction.SOUTH,Direction.EAST, Direction.WEST)},
+				new Object[]{3,3, cells, 2, 0, EnumSet.of(Direction.SOUTH,Direction.WEST)},
+				new Object[]{3,3, cells, 0, 1, EnumSet.of(Direction.SOUTH,Direction.EAST, Direction.NORTH)},
+				new Object[]{3,3, cells, 1, 1, EnumSet.of(Direction.SOUTH,Direction.EAST, Direction.WEST, Direction.NORTH)},
+				new Object[]{3,3, cells, 2, 1, EnumSet.of(Direction.SOUTH, Direction.WEST, Direction.NORTH)},
+				new Object[]{3,3, cells, 0, 2, EnumSet.of(Direction.EAST, Direction.NORTH)},
+				new Object[]{3,3, cells, 1, 2, EnumSet.of(Direction.EAST, Direction.WEST, Direction.NORTH)},
+				new Object[]{3,3, cells, 2, 2, EnumSet.of(Direction.WEST, Direction.NORTH)}
+		};
+	}
+	
+	@Test
+	@Parameters(method = "getSizeAndCellsWithValidCoordinatesAndNeighbours")
+	public void shouldReturnNeighbours(int width,int height,Cell[][] cells, int x, int y, EnumSet<Direction> neighbours){
+		Maze maze = new Maze(width,height,cells);
+		assertEquals(neighbours, maze.getNeighbours(x,y));
+	}
+	
+	@Test(expected = InvalidCellCoordinatesException.class)
+	@Parameters(method = "getSizeAndCellsWithInvalidCoordinates")
+	public void shouldBeUnableToGetNeighbours(int width, int height, Cell[][] cells, int x, int y){
+		Maze maze = new Maze(width,height,cells);
+		maze.getNeighbours(x, y);
 	}
 }
