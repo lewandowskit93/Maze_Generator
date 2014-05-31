@@ -70,16 +70,24 @@ public class Maze {
 	public boolean hasNeighbour(int x, int y, Direction direction) throws InvalidCellCoordinatesException{
 		switch(direction){
 			case NORTH:{
-				return hasNorthNeighbour(x, y);
+				if(y<0 || y>=height  || x<0 || x>=width)throw new InvalidCellCoordinatesException(x, y);
+				if(y>0)return true;
+				else return false;
 			}
 			case EAST:{
-				return hasEastNeighbour(x, y);
+				if(y<0 || y>=height  || x<0 || x>=width)throw new InvalidCellCoordinatesException(x, y);
+				if(x<(width-1))return true;
+				else return false;
 			}
 			case SOUTH:{
-				return hasSouthNeighbour(x, y);
+				if(y<0 || y>=height  || x<0 || x>=width)throw new InvalidCellCoordinatesException(x, y);
+				if(y<(height-1)) return true;
+				else return false;
 			}
 			case WEST:{
-				return hasWestNeighbour(x, y);
+				if(y<0 || y>=height  || x<0 || x>=width)throw new InvalidCellCoordinatesException(x, y);
+				if(x>0)return true;
+				else return false;
 			}
 			default:{
 				return false;
@@ -87,75 +95,26 @@ public class Maze {
 		}
 	}
 
-	public boolean hasNorthNeighbour(int x, int y) throws InvalidCellCoordinatesException{
-		if(y<0 || y>=height  || x<0 || x>=width)throw new InvalidCellCoordinatesException(x, y);
-		if(y>0)return true;
-		else return false;
-	}
-
-	public boolean hasSouthNeighbour(int x, int y) throws InvalidCellCoordinatesException{
-		if(y<0 || y>=height  || x<0 || x>=width)throw new InvalidCellCoordinatesException(x, y);
-		if(y<(height-1)) return true;
-		else return false;
-	}
-
-	public boolean hasEastNeighbour(int x, int y) throws InvalidCellCoordinatesException{
-		if(y<0 || y>=height  || x<0 || x>=width)throw new InvalidCellCoordinatesException(x, y);
-		if(x<(width-1))return true;
-		else return false;
-	}
-
-	public boolean hasWestNeighbour(int x, int y) throws InvalidCellCoordinatesException{
-		if(y<0 || y>=height  || x<0 || x>=width)throw new InvalidCellCoordinatesException(x, y);
-		if(x>0)return true;
-		else return false;
-	}
-
 	public Coordinates2D getNeighbourCoordinates(int x, int y, Direction direction) throws NoNeighbourException, InvalidCellCoordinatesException{
+		if(!hasNeighbour(x,y,direction)){
+			throw new NoNeighbourException(direction);
+		}
 		switch(direction){
 			case NORTH:{
-				return getNorthNeighbourCoordinates(x, y);
+				return new Coordinates2D(x,y-1);
 			}
 			case EAST:{
-				return getEastNeighbourCoordinates(x, y);
+				return new Coordinates2D(x+1,y);
 			}
 			case SOUTH:{
-				return getSouthNeighbourCoordinates(x, y);
+				return new Coordinates2D(x,y+1);
 			}
 			case WEST:{
-				return getWestNeighbourCoordinates(x, y);
+				return new Coordinates2D(x-1,y);
 			}
 			default:{
 				throw new NoNeighbourException(direction);
 			}
 		}
-	}
-
-	public Coordinates2D getNorthNeighbourCoordinates(int x, int y) throws NoNeighbourException, InvalidCellCoordinatesException{
-		if(!hasNorthNeighbour(x,y)){
-			throw new NoNeighbourException(Direction.NORTH);
-		}
-		return new Coordinates2D(x,y-1);
-	}
-
-	public Coordinates2D getEastNeighbourCoordinates(int x, int y) throws NoNeighbourException, InvalidCellCoordinatesException{
-		if(!hasEastNeighbour(x,y)){
-			throw new NoNeighbourException(Direction.EAST);
-		}
-		return new Coordinates2D(x+1,y);
-	}
-
-	public Coordinates2D getSouthNeighbourCoordinates(int x, int y) throws NoNeighbourException, InvalidCellCoordinatesException{
-		if(!hasSouthNeighbour(x,y)){
-			throw new NoNeighbourException(Direction.SOUTH);
-		}
-		return new Coordinates2D(x,y+1);
-	}
-
-	public Coordinates2D getWestNeighbourCoordinates(int x, int y) throws NoNeighbourException, InvalidCellCoordinatesException{
-		if(!hasWestNeighbour(x,y)){
-			throw new NoNeighbourException(Direction.WEST);
-		}
-		return new Coordinates2D(x-1,y);
 	}
 }
