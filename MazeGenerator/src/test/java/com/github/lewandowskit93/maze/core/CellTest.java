@@ -3,6 +3,7 @@ package com.github.lewandowskit93.maze.core;
 import static org.junit.Assert.*;
 
 import java.util.EnumSet;
+import java.util.Vector;
 
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
@@ -30,7 +31,7 @@ public class CellTest {
 	
 	@Test
 	@Parameters(method = "getNotSurroundingWalls")
-	public void afterCreationCellShouldNotBeSurrounded(EnumSet<Direction> walls){
+	public void givenNotAllWallsCellShouldNotBeSurrounded(EnumSet<Direction> walls){
 		Cell cell = new Cell(walls);
 		assertFalse(cell.isSurrounded());
 	}
@@ -44,14 +45,14 @@ public class CellTest {
 	
 	@Test
 	@Parameters(method = "getSurroundingWalls")
-	public void afterCreationCellShouldBeSurrounded(EnumSet<Direction> walls){
+	public void givenAllWallsCellShouldBeSurrounded(EnumSet<Direction> walls){
 		Cell cell = new Cell(walls);
 		assertTrue(cell.isSurrounded());
 	}
 	
-	@SuppressWarnings("unused")
 	@Test(expected = NullPointerException.class)
-	public void shouldNotBeUnableToCreateCell(){
+	public void shouldBeUnableToCreateCell(){
+		@SuppressWarnings("unused")
 		Cell cell = new Cell(null);
 	}
 	
@@ -66,84 +67,24 @@ public class CellTest {
 	
 	@Test
 	@Parameters(method = "getAllWallsCombinations")
-	public void shouldReturnTheWallsThatTheCellWasCreatedWith(EnumSet<Direction> walls){
+	public void afterCreatingCellWithWallsCellShouldHaveTheSameWalls(EnumSet<Direction> walls){
 		Cell cell = new Cell(walls);
-		assertEquals(walls,cell.getWalls());
+		assertSame(walls,cell.getWalls());
 	}
 	
-	@SuppressWarnings("unused")
-	private static Object[] getAllDirections(){
-		return Direction.values();
-	}
-	
-	@Test
-	@Parameters(method = "getAllDirections")
-	public void removingWallFromConstructingSetShouldHaveNoImpactOnTheCellWalls(Direction wall){
-		EnumSet<Direction> walls = EnumSet.allOf(Direction.class);
-		Cell cell = new Cell(walls);
-		walls.remove(wall);
-		assertNotEquals(walls, cell.getWalls());
-	}
-	
-	@Test
-	@Parameters(method = "getAllDirections")
-	public void addingWallToConstructingSetShouldHaveNoImpactOnTheCellWalls(Direction wall){
-		EnumSet<Direction> walls = EnumSet.noneOf(Direction.class);
-		Cell cell = new Cell(walls);
-		walls.add(wall);
-		assertNotEquals(walls, cell.getWalls());
-	}
-	
-	@Test
-	@Parameters(method = "getAllDirections")
-	public void removingWallShouldHaveNoImpactOnTheCellWalls(Direction wall){
-		Cell cell = new Cell(EnumSet.allOf(Direction.class));
-		EnumSet<Direction> walls = cell.getWalls();
-		walls.remove(wall);
-		assertNotEquals(walls, cell.getWalls());
-	}
-	
-	@Test
-	@Parameters(method = "getAllDirections")
-	public void addingWallShouldHaveNoImpactOnTheCellWalls(Direction wall){
-		Cell cell = new Cell(EnumSet.noneOf(Direction.class));
-		EnumSet<Direction> walls = cell.getWalls();
-		walls.add(wall);
-		assertNotEquals(walls, cell.getWalls());
-	}
 	
 	@Test
 	@Parameters(method = "getAllWallsCombinations")
-	public void shouldBeAbleToSetWalls(EnumSet<Direction> walls){
+	public void afterSettingWallsCellShouldHaveTheSameWalls(EnumSet<Direction> walls){
 		Cell cell = new Cell();
 		cell.setWalls(walls);
-		assertEquals(walls,cell.getWalls());
+		assertSame(walls,cell.getWalls());
 	}
 
 	@Test(expected = NullPointerException.class)
 	public void shouldBeUnableToSetCellWalls(){
 		Cell cell = new Cell();
 		cell.setWalls(null);
-	}
-	
-	@Test
-	@Parameters(method = "getAllDirections")
-	public void removingWallFromWallsUsedToSetCellWallsShouldHaveNoImpactOnCellWalls(Direction wall){
-		EnumSet<Direction> walls = EnumSet.allOf(Direction.class);
-		Cell cell = new Cell();
-		cell.setWalls(walls);
-		walls.remove(wall);
-		assertNotEquals(walls, cell.getWalls());
-	}
-	
-	@Test
-	@Parameters(method = "getAllDirections")
-	public void addingWallFromWallsUsedToSetCellWallsShouldHaveNoImpactOnCellWalls(Direction wall){
-		EnumSet<Direction> walls = EnumSet.noneOf(Direction.class);
-		Cell cell = new Cell();
-		cell.setWalls(walls);
-		walls.add(wall);
-		assertNotEquals(walls, cell.getWalls());
 	}
 	
 	@SuppressWarnings("unused")
@@ -195,17 +136,15 @@ public class CellTest {
 	}
 	
 	@Test
-	@Parameters(method = "getAllWallsCombinations")
-	public void afterClearingCellShouldHaveNoWalls(EnumSet<Direction> walls){
-		Cell cell = new Cell(walls);
+	public void afterClearingCellShouldHaveNoWalls(){
+		Cell cell = new Cell(EnumSet.allOf(Direction.class));
 		cell.clear();
 		assertEquals(EnumSet.noneOf(Direction.class),cell.getWalls());
 	}
 	
 	@Test
-	@Parameters(method = "getAllWallsCombinations")
-	public void afterSurroundingCellShouldHaveAllWalls(EnumSet<Direction> walls){
-		Cell cell = new Cell(walls);
+	public void afterSurroundingCellShouldHaveAllWalls(){
+		Cell cell = new Cell(EnumSet.noneOf(Direction.class));
 		cell.surround();
 		assertEquals(EnumSet.allOf(Direction.class),cell.getWalls());
 	}
@@ -230,7 +169,7 @@ public class CellTest {
 	}
 	
 	@Test(expected = NullPointerException.class)
-	public void shouldNotBeAbleToAddWall(){
+	public void shouldBeUnableToAddWall(){
 		Cell cell = new Cell();
 		cell.addWall(null);
 	}
@@ -244,7 +183,7 @@ public class CellTest {
 	}
 	
 	@Test(expected = NullPointerException.class)
-	public void shouldNotBeAbleToRemoveWall(){
+	public void shouldBeUnableToRemoveWall(){
 		Cell cell = new Cell();
 		cell.removeWall(null);
 	}
@@ -265,4 +204,55 @@ public class CellTest {
 		assertEquals(possibleDirections,cell.getPossibleDirections());
 	}
 	
+	@Test
+	@Parameters(method = "getAllWallsCombinations")
+	public void whenCellsHaveTheSameWallsCellsShouldBeEqual(EnumSet<Direction> walls){
+		Cell cell1 = new Cell(walls);
+		Cell cell2 = new Cell(walls);
+		assertEquals(cell1,cell2);
+		assertEquals(cell2,cell1);
+	}
+	
+	private static final Object[] getAllNotEqual(){
+		Vector<Object> vect = new Vector<Object>();
+		for(int i=0;i<16;++i){
+			for(int j=i+1;j<16;++j){
+				vect.add(new Object[]{Direction.getFromIntValue(i),Direction.getFromIntValue(j)});
+			}
+		}
+		return vect.toArray();
+	}
+	
+	@Test
+	@Parameters(method = "getAllNotEqual")
+	public void whenCellsDoesntHaveTheSameWallsCellsShouldNotBeEqual(EnumSet<Direction> walls1, EnumSet<Direction> walls2){
+		Cell cell1 = new Cell(walls1);
+		Cell cell2 = new Cell(walls2);
+		assertNotEquals(cell1,cell2);
+		assertNotEquals(cell2,cell1);
+	}
+	
+	@Test
+	@Parameters(method = "getAllWallsCombinations")
+	public void clonedCellShouldBeEqualToOriginal(EnumSet<Direction> walls){
+		Cell original = new Cell(walls);
+		Cell cloned = original.clone();
+		assertEquals(original,cloned);
+	}
+	
+	@Test
+	@Parameters(method = "getAllWallsCombinations")
+	public void clonedCellShouldNotBeTheSameAsOriginal(EnumSet<Direction> walls){
+		Cell original = new Cell(walls);
+		Cell cloned = original.clone();
+		assertNotSame(original,cloned);
+	}
+	
+	@Test
+	@Parameters(method = "getAllWallsCombinations")
+	public void clonedCellWallsShouldNotBeTheSameAsOriginal(EnumSet<Direction> walls){
+		Cell original = new Cell(walls);
+		Cell cloned = original.clone();
+		assertNotSame(original.getWalls(),cloned.getWalls());
+	}
 }

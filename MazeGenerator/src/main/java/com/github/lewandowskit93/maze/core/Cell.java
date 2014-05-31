@@ -2,7 +2,7 @@ package com.github.lewandowskit93.maze.core;
 
 import java.util.EnumSet;
 
-public class Cell {
+public class Cell implements Cloneable{
 
 	private EnumSet<Direction> walls;
 
@@ -19,12 +19,12 @@ public class Cell {
 	}
 
 	public EnumSet<Direction> getWalls() {
-		return walls.clone();
+		return walls;
 	}
 
 	public void setWalls(EnumSet<Direction> walls) {
 		if(walls==null)throw new NullPointerException("Unable to set cell walls to null.");
-		this.walls=walls.clone();
+		this.walls=walls;
 	}
 
 	public boolean hasWall(Direction wall) {
@@ -53,5 +53,17 @@ public class Cell {
 		return EnumSet.complementOf(walls);
 	}
 
+	@Override
+	public boolean equals(Object obj) {
+		if(obj==null)return false;
+		if(!(obj instanceof Cell))return false;
+		Cell other = (Cell) obj;
+		return walls.equals(other.walls);
+	}
+	
+	@Override
+	public Cell clone(){
+		return new Cell(walls.clone());
+	}
 
 }
