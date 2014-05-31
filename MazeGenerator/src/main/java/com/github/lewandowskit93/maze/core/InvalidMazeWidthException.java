@@ -5,7 +5,7 @@ public class InvalidMazeWidthException extends InvalidMazeSizeException{
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 2L;
 	private int width;
 	
 	public InvalidMazeWidthException(){
@@ -18,7 +18,7 @@ public class InvalidMazeWidthException extends InvalidMazeSizeException{
 		this.width=width;
 	}
 	
-	public int getWidth(){
+	public final int getWidth(){
 		return width;
 	}
 }

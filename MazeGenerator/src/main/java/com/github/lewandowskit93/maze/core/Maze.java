@@ -5,7 +5,9 @@ public class Maze {
 	private int width,height;
 	private Cell[][] cells;
 	
-	public Maze(int width, int height) {
+	public Maze(int width, int height) throws
+	InvalidMazeWidthException, InvalidMazeHeightException
+	{
 		if(width<=0)throw new InvalidMazeWidthException(width);
 		if(height<=0)throw new InvalidMazeHeightException(height);
 		this.width=width;
@@ -13,7 +15,10 @@ public class Maze {
 		cells=createCellsArray(width,height);
 	}
 
-	public Maze(int width, int height, Cell[][] cells) {
+	public Maze(int width, int height, Cell[][] cells) throws 
+	InvalidMazeWidthException, InvalidMazeHeightException,
+	InvalidCellsArrayHeightException,InvalidCellsArrayWidthException
+	{	
 		if(width<=0)throw new InvalidMazeWidthException(width);
 		if(height<=0)throw new InvalidMazeHeightException(height);
 		if(height!=cells.length)throw new InvalidCellsArrayHeightException(height);
@@ -47,5 +52,10 @@ public class Maze {
 			}
 		}
 		return array;
+	}
+
+	public Cell getCell(int x, int y) throws InvalidCellCoordinatesException{
+		if(x<0 || x>=width || y<0 || y>=height)throw new InvalidCellCoordinatesException(x,y);
+		return cells[y][x];
 	}
 }

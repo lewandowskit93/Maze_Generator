@@ -35,11 +35,11 @@ public enum Direction {
 		return (int)Math.pow(2, Direction.values().length)-1;
 	}
 
-	public static int getIntValueOf(Direction direction) {
+	public static int getIntValueOf(Direction direction) throws NullPointerException{
 		return 1<<direction.ordinal();
 	}
 
-	public static int getIntValueOf(EnumSet<Direction> directions) {
+	public static int getIntValueOf(EnumSet<Direction> directions) throws NullPointerException{
 		int value = 0;
 		for(Direction direction : directions){
 			value+=getIntValueOf(direction);

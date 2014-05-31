@@ -8,7 +8,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 @RunWith(JUnitParamsRunner.class)
-public class MazeTest {
+public class MazeConstructorsTest {
 	
 	@SuppressWarnings("unused")
 	private static final Object[] getValidMazeSizes(){
@@ -111,15 +111,6 @@ public class MazeTest {
 				assertTrue("Cell at (x,y) : ("+j+","+i+") is not surrounded.",cells[i][j].isSurrounded());
 			}
 		}
-	}
-	
-	@Test
-	@Parameters(method = "getValidMazeSizes")
-	public void askingMazeTwoTimesAboutItsCellsShouldReturnTheSameCells(int width, int height){
-		Maze maze = new Maze(width,height);
-		Cell[][] cells1 = maze.getCells();
-		Cell[][] cells2 = maze.getCells();
-		assertSame(cells1,cells2);
 	}
 	
 	@SuppressWarnings("unused")

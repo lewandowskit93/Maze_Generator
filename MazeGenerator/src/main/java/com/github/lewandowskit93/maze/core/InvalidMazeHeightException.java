@@ -4,7 +4,7 @@ public class InvalidMazeHeightException extends InvalidMazeSizeException {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 2L;
 	private int height;
 	
 	public InvalidMazeHeightException(){
@@ -17,7 +17,7 @@ public class InvalidMazeHeightException extends InvalidMazeSizeException {
 		this.height=height;
 	}
 	
-	public int getHeight(){
+	public final int getHeight(){
 		return height;
 	}
 }
