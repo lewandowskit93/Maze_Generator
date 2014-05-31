@@ -117,4 +117,56 @@ public class Maze {
 			}
 		}
 	}
+
+	public void removeWall(int x, int y, Direction direction) throws InvalidCellCoordinatesException{
+		getCell(x,y).removeWall(direction);
+		if(hasNeighbour(x, y, direction)){
+			Coordinates2D neighbourCoords = getNeighbourCoordinates(x, y, direction);
+			Cell neighbour = getCell(neighbourCoords.getX(),neighbourCoords.getY());
+			switch(direction){
+				case NORTH:{
+					neighbour.removeWall(Direction.SOUTH);
+					break;
+				}
+				case EAST:{
+					neighbour.removeWall(Direction.WEST);
+					break;
+				}
+				case WEST:{
+					neighbour.removeWall(Direction.EAST);
+					break;
+				}
+				case SOUTH:{
+					neighbour.removeWall(Direction.NORTH);
+					break;
+				}
+			}
+		}
+	}
+
+	public void addWall(int x, int y, Direction direction) throws InvalidCellCoordinatesException{
+		getCell(x,y).addWall(direction);
+		if(hasNeighbour(x, y, direction)){
+			Coordinates2D neighbourCoords = getNeighbourCoordinates(x, y, direction);
+			Cell neighbour = getCell(neighbourCoords.getX(),neighbourCoords.getY());
+			switch(direction){
+				case NORTH:{
+					neighbour.addWall(Direction.SOUTH);
+					break;
+				}
+				case EAST:{
+					neighbour.addWall(Direction.WEST);
+					break;
+				}
+				case SOUTH:{
+					neighbour.addWall(Direction.NORTH);
+					break;
+				}
+				case WEST:{
+					neighbour.addWall(Direction.EAST);
+					break;
+				}
+			}
+		}
+	}
 }

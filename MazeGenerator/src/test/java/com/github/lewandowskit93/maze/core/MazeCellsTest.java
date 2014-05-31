@@ -506,6 +506,421 @@ public class MazeCellsTest {
 		Coordinates2D neighbour = maze.getNeighbourCoordinates(x,y,Direction.WEST);
 	}
 	
+	private static final Cell[][] getCellMocks(){
+		return new Cell[][]{
+				{mock(Cell.class),mock(Cell.class),mock(Cell.class)},
+				{mock(Cell.class),mock(Cell.class),mock(Cell.class)},
+				{mock(Cell.class),mock(Cell.class),mock(Cell.class)}
+		};
+	}
 	
-
+	@Test
+	public void shouldRemoveNorthWall(){
+		Cell[][] cellMocks = getCellMocks();
+		Maze maze = spy(new Maze(3,3,cellMocks));
+		doReturn(false).when(maze).hasNeighbour(1, 1, Direction.NORTH);
+		maze.removeWall(1,1,Direction.NORTH);
+		verify(cellMocks[1][1]).removeWall(Direction.NORTH);
+		for(int i=0;i<3;++i){
+			for(int j=0;j<3;++j){
+				verify(cellMocks[i][j],never()).removeWall(Direction.EAST);
+				verify(cellMocks[i][j],never()).removeWall(Direction.WEST);
+				verify(cellMocks[i][j],never()).removeWall(Direction.SOUTH);
+				if(i!=j){
+					verify(cellMocks[i][j],never()).removeWall(Direction.NORTH);
+				}
+			}
+			
+		}
+	}
+	
+	@Test
+	public void shouldRemoveNorthWallOfCellAndSouthWallOfNeighbour(){
+		Cell[][] cellMocks = getCellMocks();
+		Maze maze = spy(new Maze(3,3,cellMocks));
+		doReturn(true).when(maze).hasNeighbour(1, 1, Direction.NORTH);
+		maze.removeWall(1,1,Direction.NORTH);
+		verify(cellMocks[1][1]).removeWall(Direction.NORTH);
+		verify(cellMocks[0][1]).removeWall(Direction.SOUTH);
+		verify(maze).getNeighbourCoordinates(1,1, Direction.NORTH);
+		for(int i=0;i<3;++i){
+			for(int j=0;j<3;++j){
+				verify(cellMocks[i][j],never()).removeWall(Direction.EAST);
+				verify(cellMocks[i][j],never()).removeWall(Direction.WEST);
+				if(i!=0 || j!=1)verify(cellMocks[i][j],never()).removeWall(Direction.SOUTH);
+				if(i!=j){
+					verify(cellMocks[i][j],never()).removeWall(Direction.NORTH);
+				}
+			}
+			
+		}
+	}
+	
+	@Test
+	public void shouldRemoveSouthWall(){
+		Cell[][] cellMocks = getCellMocks();
+		Maze maze = spy(new Maze(3,3,cellMocks));
+		doReturn(false).when(maze).hasNeighbour(1, 1, Direction.SOUTH);
+		maze.removeWall(1,1,Direction.SOUTH);
+		verify(cellMocks[1][1]).removeWall(Direction.SOUTH);
+		for(int i=0;i<3;++i){
+			for(int j=0;j<3;++j){
+				verify(cellMocks[i][j],never()).removeWall(Direction.EAST);
+				verify(cellMocks[i][j],never()).removeWall(Direction.NORTH);
+				verify(cellMocks[i][j],never()).removeWall(Direction.WEST);
+				if(i!=j){
+					verify(cellMocks[i][j],never()).removeWall(Direction.SOUTH);
+				}
+			}
+			
+		}
+	}
+	
+	
+	@Test
+	public void shouldRemoveSouthWallOfCellAndNorthWallOfNeighbour(){
+		Cell[][] cellMocks = getCellMocks();
+		Maze maze = spy(new Maze(3,3,cellMocks));
+		doReturn(true).when(maze).hasNeighbour(1, 1, Direction.SOUTH);
+		maze.removeWall(1,1,Direction.SOUTH);
+		verify(cellMocks[1][1]).removeWall(Direction.SOUTH);
+		verify(cellMocks[2][1]).removeWall(Direction.NORTH);
+		verify(maze).getNeighbourCoordinates(1,1, Direction.SOUTH);
+		for(int i=0;i<3;++i){
+			for(int j=0;j<3;++j){
+				verify(cellMocks[i][j],never()).removeWall(Direction.EAST);
+				if(i!=2 || j!=1)verify(cellMocks[i][j],never()).removeWall(Direction.NORTH);
+				verify(cellMocks[i][j],never()).removeWall(Direction.WEST);
+				if(i!=j){
+					verify(cellMocks[i][j],never()).removeWall(Direction.SOUTH);
+				}
+			}
+			
+		}
+	}
+	
+	@Test
+	public void shouldRemoveEastWall(){
+		Cell[][] cellMocks = getCellMocks();
+		Maze maze = spy(new Maze(3,3,cellMocks));
+		doReturn(false).when(maze).hasNeighbour(1, 1, Direction.EAST);
+		maze.removeWall(1,1,Direction.EAST);
+		verify(cellMocks[1][1]).removeWall(Direction.EAST);
+		for(int i=0;i<3;++i){
+			for(int j=0;j<3;++j){
+				verify(cellMocks[i][j],never()).removeWall(Direction.NORTH);
+				verify(cellMocks[i][j],never()).removeWall(Direction.WEST);
+				verify(cellMocks[i][j],never()).removeWall(Direction.SOUTH);
+				if(i!=j){
+					verify(cellMocks[i][j],never()).removeWall(Direction.EAST);
+				}
+			}
+			
+		}
+	}
+	
+	
+	@Test
+	public void shouldRemoveEastWallOfCellAndWestWallOfNeighbour(){
+		Cell[][] cellMocks = getCellMocks();
+		Maze maze = spy(new Maze(3,3,cellMocks));
+		doReturn(true).when(maze).hasNeighbour(1, 1, Direction.EAST);
+		maze.removeWall(1,1,Direction.EAST);
+		verify(cellMocks[1][1]).removeWall(Direction.EAST);
+		verify(cellMocks[1][2]).removeWall(Direction.WEST);
+		verify(maze).getNeighbourCoordinates(1,1, Direction.EAST);
+		for(int i=0;i<3;++i){
+			for(int j=0;j<3;++j){
+				if(i!=1 || j!=2)verify(cellMocks[i][j],never()).removeWall(Direction.WEST);
+				verify(cellMocks[i][j],never()).removeWall(Direction.NORTH);
+				verify(cellMocks[i][j],never()).removeWall(Direction.SOUTH);
+				if(i!=j){
+					verify(cellMocks[i][j],never()).removeWall(Direction.EAST);
+				}
+			}
+			
+		}
+	}
+	
+	@Test
+	public void shouldRemoveWestWall(){
+		Cell[][] cellMocks = getCellMocks();
+		Maze maze = spy(new Maze(3,3,cellMocks));
+		doReturn(false).when(maze).hasNeighbour(1, 1, Direction.WEST);
+		maze.removeWall(1,1,Direction.WEST);
+		verify(cellMocks[1][1]).removeWall(Direction.WEST);
+		for(int i=0;i<3;++i){
+			for(int j=0;j<3;++j){
+				verify(cellMocks[i][j],never()).removeWall(Direction.EAST);
+				verify(cellMocks[i][j],never()).removeWall(Direction.NORTH);
+				verify(cellMocks[i][j],never()).removeWall(Direction.SOUTH);
+				if(i!=j){
+					verify(cellMocks[i][j],never()).removeWall(Direction.WEST);
+				}
+			}
+			
+		}
+		
+	}
+	
+	
+	@Test
+	public void shouldRemoveWestWallOfCellAndEastWallOfNeighbour(){
+		Cell[][] cellMocks = getCellMocks();
+		Maze maze = spy(new Maze(3,3,cellMocks));
+		doReturn(true).when(maze).hasNeighbour(1, 1, Direction.WEST);
+		maze.removeWall(1,1,Direction.WEST);
+		verify(cellMocks[1][1]).removeWall(Direction.WEST);
+		verify(cellMocks[1][0]).removeWall(Direction.EAST);
+		verify(maze).getNeighbourCoordinates(1,1, Direction.WEST);
+		for(int i=0;i<3;++i){
+			for(int j=0;j<3;++j){
+				verify(cellMocks[i][j],never()).removeWall(Direction.NORTH);
+				verify(cellMocks[i][j],never()).removeWall(Direction.SOUTH);
+				if(i!=j){
+					verify(cellMocks[i][j],never()).removeWall(Direction.WEST);
+				}
+				if(i!=1 || j!=0){
+					verify(cellMocks[i][j],never()).removeWall(Direction.EAST);
+				}
+			}
+		}
+	}
+	
+	@Test
+	public void shouldAddNorthWall(){
+		Cell[][] cellMocks = getCellMocks();
+		Maze maze = spy(new Maze(3,3,cellMocks));
+		doReturn(false).when(maze).hasNeighbour(1, 1, Direction.NORTH);
+		maze.addWall(1,1,Direction.NORTH);
+		verify(cellMocks[1][1]).addWall(Direction.NORTH);
+		for(int i=0;i<3;++i){
+			for(int j=0;j<3;++j){
+				verify(cellMocks[i][j],never()).addWall(Direction.EAST);
+				verify(cellMocks[i][j],never()).addWall(Direction.WEST);
+				verify(cellMocks[i][j],never()).addWall(Direction.SOUTH);
+				if(i!=j){
+					verify(cellMocks[i][j],never()).addWall(Direction.NORTH);
+				}
+			}
+			
+		}
+	}
+	
+	@Test
+	public void shouldAddNorthWallOfCellAndSouthWallOfNeighbour(){
+		Cell[][] cellMocks = getCellMocks();
+		Maze maze = spy(new Maze(3,3,cellMocks));
+		doReturn(true).when(maze).hasNeighbour(1, 1, Direction.NORTH);
+		maze.addWall(1,1,Direction.NORTH);
+		verify(cellMocks[1][1]).addWall(Direction.NORTH);
+		verify(cellMocks[0][1]).addWall(Direction.SOUTH);
+		verify(maze).getNeighbourCoordinates(1,1, Direction.NORTH);
+		for(int i=0;i<3;++i){
+			for(int j=0;j<3;++j){
+				verify(cellMocks[i][j],never()).addWall(Direction.EAST);
+				verify(cellMocks[i][j],never()).addWall(Direction.WEST);
+				if(i!=0 || j!=1)verify(cellMocks[i][j],never()).addWall(Direction.SOUTH);
+				if(i!=j){
+					verify(cellMocks[i][j],never()).addWall(Direction.NORTH);
+				}
+			}
+			
+		}
+	}
+	
+	@Test
+	public void shouldAddSouthWall(){
+		Cell[][] cellMocks = getCellMocks();
+		Maze maze = spy(new Maze(3,3,cellMocks));
+		doReturn(false).when(maze).hasNeighbour(1, 1, Direction.SOUTH);
+		maze.addWall(1,1,Direction.SOUTH);
+		verify(cellMocks[1][1]).addWall(Direction.SOUTH);
+		for(int i=0;i<3;++i){
+			for(int j=0;j<3;++j){
+				verify(cellMocks[i][j],never()).addWall(Direction.EAST);
+				verify(cellMocks[i][j],never()).addWall(Direction.NORTH);
+				verify(cellMocks[i][j],never()).addWall(Direction.WEST);
+				if(i!=j){
+					verify(cellMocks[i][j],never()).addWall(Direction.SOUTH);
+				}
+			}
+			
+		}
+	}
+	
+	
+	@Test
+	public void shouldAddSouthWallOfCellAndNorthWallOfNeighbour(){
+		Cell[][] cellMocks = getCellMocks();
+		Maze maze = spy(new Maze(3,3,cellMocks));
+		doReturn(true).when(maze).hasNeighbour(1, 1, Direction.SOUTH);
+		maze.addWall(1,1,Direction.SOUTH);
+		verify(cellMocks[1][1]).addWall(Direction.SOUTH);
+		verify(cellMocks[2][1]).addWall(Direction.NORTH);
+		verify(maze).getNeighbourCoordinates(1,1, Direction.SOUTH);
+		for(int i=0;i<3;++i){
+			for(int j=0;j<3;++j){
+				verify(cellMocks[i][j],never()).addWall(Direction.EAST);
+				if(i!=2 || j!=1)verify(cellMocks[i][j],never()).addWall(Direction.NORTH);
+				verify(cellMocks[i][j],never()).addWall(Direction.WEST);
+				if(i!=j){
+					verify(cellMocks[i][j],never()).addWall(Direction.SOUTH);
+				}
+			}
+			
+		}
+	}
+	
+	@Test
+	public void shouldAddEastWall(){
+		Cell[][] cellMocks = getCellMocks();
+		Maze maze = spy(new Maze(3,3,cellMocks));
+		doReturn(false).when(maze).hasNeighbour(1, 1, Direction.EAST);
+		maze.addWall(1,1,Direction.EAST);
+		verify(cellMocks[1][1]).addWall(Direction.EAST);
+		for(int i=0;i<3;++i){
+			for(int j=0;j<3;++j){
+				verify(cellMocks[i][j],never()).addWall(Direction.NORTH);
+				verify(cellMocks[i][j],never()).addWall(Direction.WEST);
+				verify(cellMocks[i][j],never()).addWall(Direction.SOUTH);
+				if(i!=j){
+					verify(cellMocks[i][j],never()).addWall(Direction.EAST);
+				}
+			}
+			
+		}
+	}
+	
+	
+	@Test
+	public void shouldAddEastWallOfCellAndWestWallOfNeighbour(){
+		Cell[][] cellMocks = getCellMocks();
+		Maze maze = spy(new Maze(3,3,cellMocks));
+		doReturn(true).when(maze).hasNeighbour(1, 1, Direction.EAST);
+		maze.addWall(1,1,Direction.EAST);
+		verify(cellMocks[1][1]).addWall(Direction.EAST);
+		verify(cellMocks[1][2]).addWall(Direction.WEST);
+		verify(maze).getNeighbourCoordinates(1,1, Direction.EAST);
+		for(int i=0;i<3;++i){
+			for(int j=0;j<3;++j){
+				if(i!=1 || j!=2)verify(cellMocks[i][j],never()).addWall(Direction.WEST);
+				verify(cellMocks[i][j],never()).addWall(Direction.NORTH);
+				verify(cellMocks[i][j],never()).addWall(Direction.SOUTH);
+				if(i!=j){
+					verify(cellMocks[i][j],never()).addWall(Direction.EAST);
+				}
+			}
+			
+		}
+	}
+	
+	@Test
+	public void shouldAddWestWall(){
+		Cell[][] cellMocks = getCellMocks();
+		Maze maze = spy(new Maze(3,3,cellMocks));
+		doReturn(false).when(maze).hasNeighbour(1, 1, Direction.WEST);
+		maze.addWall(1,1,Direction.WEST);
+		verify(cellMocks[1][1]).addWall(Direction.WEST);
+		for(int i=0;i<3;++i){
+			for(int j=0;j<3;++j){
+				verify(cellMocks[i][j],never()).addWall(Direction.EAST);
+				verify(cellMocks[i][j],never()).addWall(Direction.NORTH);
+				verify(cellMocks[i][j],never()).addWall(Direction.SOUTH);
+				if(i!=j){
+					verify(cellMocks[i][j],never()).addWall(Direction.WEST);
+				}
+			}
+			
+		}
+		
+	}
+	
+	
+	@Test
+	public void shouldAddWestWallOfCellAndEastWallOfNeighbour(){
+		Cell[][] cellMocks = getCellMocks();
+		Maze maze = spy(new Maze(3,3,cellMocks));
+		doReturn(true).when(maze).hasNeighbour(1, 1, Direction.WEST);
+		maze.addWall(1,1,Direction.WEST);
+		verify(cellMocks[1][1]).addWall(Direction.WEST);
+		verify(cellMocks[1][0]).addWall(Direction.EAST);
+		verify(maze).getNeighbourCoordinates(1,1, Direction.WEST);
+		for(int i=0;i<3;++i){
+			for(int j=0;j<3;++j){
+				verify(cellMocks[i][j],never()).addWall(Direction.NORTH);
+				verify(cellMocks[i][j],never()).addWall(Direction.SOUTH);
+				if(i!=j){
+					verify(cellMocks[i][j],never()).addWall(Direction.WEST);
+				}
+				if(i!=1 || j!=0){
+					verify(cellMocks[i][j],never()).addWall(Direction.EAST);
+				}
+			}
+		}
+	}
+	
+	@Test(expected = InvalidCellCoordinatesException.class)
+	public void shouldBeUnableToRemoveNorthWall(){
+		Cell[][] cellMocks = getCellMocks();
+		Maze maze = spy(new Maze(3,3,cellMocks));
+		doThrow(new InvalidCellCoordinatesException()).when(maze).getCell(1, 1);
+		maze.removeWall(1,1,Direction.NORTH);
+	}
+	
+	@Test(expected = InvalidCellCoordinatesException.class)
+	public void shouldBeUnableToRemoveEastWall(){
+		Cell[][] cellMocks = getCellMocks();
+		Maze maze = spy(new Maze(3,3,cellMocks));
+		doThrow(new InvalidCellCoordinatesException()).when(maze).getCell(1, 1);
+		maze.removeWall(1,1,Direction.EAST);
+	}
+	
+	@Test(expected = InvalidCellCoordinatesException.class)
+	public void shouldBeUnableToRemoveSouthWall(){
+		Cell[][] cellMocks = getCellMocks();
+		Maze maze = spy(new Maze(3,3,cellMocks));
+		doThrow(new InvalidCellCoordinatesException()).when(maze).getCell(1, 1);
+		maze.removeWall(1,1,Direction.SOUTH);
+	}
+	
+	@Test(expected = InvalidCellCoordinatesException.class)
+	public void shouldBeUnableToRemoveWestWall(){
+		Cell[][] cellMocks = getCellMocks();
+		Maze maze = spy(new Maze(3,3,cellMocks));
+		doThrow(new InvalidCellCoordinatesException()).when(maze).getCell(1, 1);
+		maze.removeWall(1,1,Direction.WEST);
+	}
+	
+	@Test(expected = InvalidCellCoordinatesException.class)
+	public void shouldBeUnableToAddNorthWall(){
+		Cell[][] cellMocks = getCellMocks();
+		Maze maze = spy(new Maze(3,3,cellMocks));
+		doThrow(new InvalidCellCoordinatesException()).when(maze).getCell(1, 1);
+		maze.addWall(1,1,Direction.NORTH);
+	}
+	
+	@Test(expected = InvalidCellCoordinatesException.class)
+	public void shouldBeUnableToAddEastWall(){
+		Cell[][] cellMocks = getCellMocks();
+		Maze maze = spy(new Maze(3,3,cellMocks));
+		doThrow(new InvalidCellCoordinatesException()).when(maze).getCell(1, 1);
+		maze.addWall(1,1,Direction.EAST);
+	}
+	
+	@Test(expected = InvalidCellCoordinatesException.class)
+	public void shouldBeUnableToAddSouthWall(){
+		Cell[][] cellMocks = getCellMocks();
+		Maze maze = spy(new Maze(3,3,cellMocks));
+		doThrow(new InvalidCellCoordinatesException()).when(maze).getCell(1, 1);
+		maze.addWall(1,1,Direction.SOUTH);
+	}
+	
+	@Test(expected = InvalidCellCoordinatesException.class)
+	public void shouldBeUnableToAddWestWall(){
+		Cell[][] cellMocks = getCellMocks();
+		Maze maze = spy(new Maze(3,3,cellMocks));
+		doThrow(new InvalidCellCoordinatesException()).when(maze).getCell(1, 1);
+		maze.addWall(1,1,Direction.WEST);
+	}
 }
