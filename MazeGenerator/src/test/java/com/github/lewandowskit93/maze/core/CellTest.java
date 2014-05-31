@@ -213,6 +213,7 @@ public class CellTest {
 		assertEquals(cell2,cell1);
 	}
 	
+	@SuppressWarnings("unused")
 	private static final Object[] getAllNotEqual(){
 		Vector<Object> vect = new Vector<Object>();
 		for(int i=0;i<16;++i){

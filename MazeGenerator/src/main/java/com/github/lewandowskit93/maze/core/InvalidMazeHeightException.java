@@ -1,18 +1,18 @@
 package com.github.lewandowskit93.maze.core;
 
-public class InvalidMazeHeight extends InvalidMazeSize {
+public class InvalidMazeHeightException extends InvalidMazeSizeException {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -1418313683084892466L;
+	private static final long serialVersionUID = 1L;
 	private int height;
 	
-	public InvalidMazeHeight(){
+	public InvalidMazeHeightException(){
 		super("Invalid maze height = 0");
 		height=0;
 	}
 	
-	public InvalidMazeHeight(int height){
+	public InvalidMazeHeightException(int height){
 		super("Invalid maze height = "+height);
 		this.height=height;
 	}

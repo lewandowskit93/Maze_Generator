@@ -6,11 +6,23 @@ public class Maze {
 	private Cell[][] cells;
 	
 	public Maze(int width, int height) {
-		if(width<=0)throw new InvalidMazeWidth(width);
-		if(height<=0)throw new InvalidMazeHeight(height);
+		if(width<=0)throw new InvalidMazeWidthException(width);
+		if(height<=0)throw new InvalidMazeHeightException(height);
 		this.width=width;
 		this.height=height;
 		cells=createCellsArray(width,height);
+	}
+
+	public Maze(int width, int height, Cell[][] cells) {
+		if(width<=0)throw new InvalidMazeWidthException(width);
+		if(height<=0)throw new InvalidMazeHeightException(height);
+		if(height!=cells.length)throw new InvalidCellsArrayHeightException(height);
+		for(int i=0;i<height;++i){
+			if(width!=cells[i].length)throw new InvalidCellsArrayWidthException(width);
+		}
+		this.width=width;
+		this.height=height;
+		this.cells=cells;
 	}
 
 	public int getWidth() {
@@ -28,9 +40,9 @@ public class Maze {
 	
 
 	private static final Cell[][] createCellsArray(int width, int height){
-		Cell[][] array = new Cell[width][height];
-		for(int i =0; i<width;++i){
-			for(int j=0;j<height;++j){
+		Cell[][] array = new Cell[height][width];
+		for(int i =0; i<height;++i){
+			for(int j=0;j<width;++j){
 				array[i][j] = new Cell();
 			}
 		}
