@@ -221,7 +221,7 @@ public class MazeCellsTest {
 	
 	@Test(expected = InvalidCellCoordinatesException.class)
 	@Parameters(method = "getSizeAndCellsWithInvalidCoordinates")
-	public void shouldNotBeAbleToCheckIfCellHasNorthNeighbour(int width, int height, Cell[][] cells, int x, int y){
+	public void shouldBeUnableToCheckIfCellHasNorthNeighbour(int width, int height, Cell[][] cells, int x, int y){
 		Maze maze = new Maze(width,height,cells);
 		maze.hasNeighbour(x, y, Direction.NORTH);
 	}
@@ -279,7 +279,7 @@ public class MazeCellsTest {
 	
 	@Test(expected = InvalidCellCoordinatesException.class)
 	@Parameters(method = "getSizeAndCellsWithInvalidCoordinates")
-	public void shouldNotBeAbleToCheckIfCellHasSouthNeighbour(int width, int height, Cell[][] cells, int x, int y){
+	public void shouldBeUnableToCheckIfCellHasSouthNeighbour(int width, int height, Cell[][] cells, int x, int y){
 		Maze maze = new Maze(width,height,cells);
 		maze.hasNeighbour(x, y, Direction.SOUTH);
 	}
@@ -336,7 +336,7 @@ public class MazeCellsTest {
 	
 	@Test(expected = InvalidCellCoordinatesException.class)
 	@Parameters(method = "getSizeAndCellsWithInvalidCoordinates")
-	public void shouldNotBeAbleToCheckIfCellHasEastNeighbour(int width, int height, Cell[][] cells, int x, int y){
+	public void shouldBeUnableToCheckIfCellHasEastNeighbour(int width, int height, Cell[][] cells, int x, int y){
 		Maze maze = new Maze(width,height,cells);
 		maze.hasNeighbour(x, y, Direction.EAST);
 	}
@@ -394,7 +394,7 @@ public class MazeCellsTest {
 	
 	@Test(expected = InvalidCellCoordinatesException.class)
 	@Parameters(method = "getSizeAndCellsWithInvalidCoordinates")
-	public void shouldNotBeAbleToCheckIfCellHasWestNeighbour(int width, int height, Cell[][] cells, int x, int y){
+	public void shouldBeUnableToCheckIfCellHasWestNeighbour(int width, int height, Cell[][] cells, int x, int y){
 		Maze maze = new Maze(width,height,cells);
 		maze.hasNeighbour(x, y, Direction.WEST);
 	}
@@ -420,7 +420,7 @@ public class MazeCellsTest {
 	
 	@Test(expected = InvalidCellCoordinatesException.class)
 	@Parameters(method = "getSizeAndCellsWithInvalidCoordinates")
-	public void shouldBeUnableToGetNorthNeighbourCoordinates3(int width, int height, Cell[][] cells, int x, int y){
+	public void shouldBeUnableToGetNorthNeighbourCoordinates2(int width, int height, Cell[][] cells, int x, int y){
 		Maze maze = new Maze(width,height,cells);
 		@SuppressWarnings("unused")
 		Coordinates2D neighbour = maze.getNeighbourCoordinates(x,y,Direction.NORTH);
@@ -447,7 +447,7 @@ public class MazeCellsTest {
 	
 	@Test(expected = InvalidCellCoordinatesException.class)
 	@Parameters(method = "getSizeAndCellsWithInvalidCoordinates")
-	public void shouldBeUnableToGetEastNeighbourCoordinates3(int width, int height, Cell[][] cells, int x, int y){
+	public void shouldBeUnableToGetEastNeighbourCoordinates2(int width, int height, Cell[][] cells, int x, int y){
 		Maze maze = new Maze(width,height,cells);
 		@SuppressWarnings("unused")
 		Coordinates2D neighbour = maze.getNeighbourCoordinates(x,y,Direction.EAST);
@@ -474,7 +474,7 @@ public class MazeCellsTest {
 	
 	@Test(expected = InvalidCellCoordinatesException.class)
 	@Parameters(method = "getSizeAndCellsWithInvalidCoordinates")
-	public void shouldBeUnableToGetSouthNeighbourCoordinates3(int width, int height, Cell[][] cells, int x, int y){
+	public void shouldBeUnableToGetSouthNeighbourCoordinates2(int width, int height, Cell[][] cells, int x, int y){
 		Maze maze = new Maze(width,height,cells);
 		@SuppressWarnings("unused")
 		Coordinates2D neighbour = maze.getNeighbourCoordinates(x,y,Direction.SOUTH);
