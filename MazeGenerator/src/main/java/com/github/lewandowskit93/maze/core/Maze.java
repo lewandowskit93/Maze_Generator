@@ -110,4 +110,52 @@ public class Maze {
 		if(x>0)return true;
 		else return false;
 	}
+
+	public Coordinates2D getNeighbourCoordinates(int x, int y, Direction direction) throws NoNeighbourException, InvalidCellCoordinatesException{
+		switch(direction){
+			case NORTH:{
+				return getNorthNeighbourCoordinates(x, y);
+			}
+			case EAST:{
+				return getEastNeighbourCoordinates(x, y);
+			}
+			case SOUTH:{
+				return getSouthNeighbourCoordinates(x, y);
+			}
+			case WEST:{
+				return getWestNeighbourCoordinates(x, y);
+			}
+			default:{
+				throw new NoNeighbourException(direction);
+			}
+		}
+	}
+
+	public Coordinates2D getNorthNeighbourCoordinates(int x, int y) throws NoNeighbourException, InvalidCellCoordinatesException{
+		if(!hasNorthNeighbour(x,y)){
+			throw new NoNeighbourException(Direction.NORTH);
+		}
+		return new Coordinates2D(x,y-1);
+	}
+
+	public Coordinates2D getEastNeighbourCoordinates(int x, int y) throws NoNeighbourException, InvalidCellCoordinatesException{
+		if(!hasEastNeighbour(x,y)){
+			throw new NoNeighbourException(Direction.EAST);
+		}
+		return new Coordinates2D(x+1,y);
+	}
+
+	public Coordinates2D getSouthNeighbourCoordinates(int x, int y) throws NoNeighbourException, InvalidCellCoordinatesException{
+		if(!hasSouthNeighbour(x,y)){
+			throw new NoNeighbourException(Direction.SOUTH);
+		}
+		return new Coordinates2D(x,y+1);
+	}
+
+	public Coordinates2D getWestNeighbourCoordinates(int x, int y) throws NoNeighbourException, InvalidCellCoordinatesException{
+		if(!hasWestNeighbour(x,y)){
+			throw new NoNeighbourException(Direction.WEST);
+		}
+		return new Coordinates2D(x-1,y);
+	}
 }
