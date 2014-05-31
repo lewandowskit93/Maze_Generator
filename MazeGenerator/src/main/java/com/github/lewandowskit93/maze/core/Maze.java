@@ -179,4 +179,8 @@ public class Maze {
 		}
 		return neighbours;
 	}
+
+	public boolean isConnected(int x, int y, Direction direction) {
+		return getCell(x,y).hasWall(direction);
+	}
 }

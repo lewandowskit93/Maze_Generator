@@ -960,4 +960,34 @@ public class MazeCellsTest {
 		Maze maze = new Maze(width,height,cells);
 		maze.getNeighbours(x, y);
 	}
+	
+	@SuppressWarnings("unused")
+	private static final Object[] getAllDirections(){
+		return Direction.values();
+	}
+	
+	@Test
+	@Parameters(method = "getAllDirections")
+	public void shouldBeConnected(Direction direction){
+		Cell[][] cells = getCellMocks();
+		Maze maze = new Maze(3,3,cells);
+		when(cells[1][1].hasWall(direction)).thenReturn(true);
+		assertTrue(maze.isConnected(1,1,direction));
+	}
+	
+	@Test
+	@Parameters(method = "getAllDirections")
+	public void shouldNotBeConnected(Direction direction){
+		Cell[][] cells = getCellMocks();
+		Maze maze = new Maze(3,3,cells);
+		when(cells[1][1].hasWall(direction)).thenReturn(false);
+		assertFalse(maze.isConnected(1,1,direction));
+	}
+	
+	@Test(expected = InvalidCellCoordinatesException.class)
+	@Parameters(method = "getSizeAndCellsWithInvalidCoordinates")
+	public void shouldBeUnableToCheckIfCellIsConnected(int width, int height, Cell[][] cells, int x, int y){
+		Maze maze = new Maze(width,height,cells);
+		maze.isConnected(x,y,Direction.NORTH);
+	}
 }
