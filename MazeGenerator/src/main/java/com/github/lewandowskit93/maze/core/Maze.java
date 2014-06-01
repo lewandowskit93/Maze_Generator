@@ -201,4 +201,17 @@ public class Maze {
 		}
 		return connectedNeighbours;
 	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if(!(obj instanceof Maze))return false;
+		Maze other = (Maze) obj;
+		if(!(width==other.width && height==other.height))return false;
+		for(int x=0;x<width;++x){
+			for(int y=0;y<height;++y){
+				if(!getCell(x, y).equals(other.getCell(x, y)))return false;
+			}
+		}
+		return true;
+	}
 }

@@ -1092,4 +1092,58 @@ public class MazeCellsTest {
 		Maze maze = new Maze(width,height,cells);
 		maze.getDisconnectedNeighbours(x, y);
 	}
+	
+	@Test
+	@Parameters(method = "getValidMazeSizes")
+	public void createdMazesShouldBeEqualButShouldNotBeTheSame(int width, int height){
+		Maze maze1 = new Maze(width,height);
+		Maze maze2 = new Maze(width,height);
+		assertEquals(maze1,maze2);
+		assertEquals(maze2,maze1);
+		assertNotSame(maze1,maze2);
+	}
+	
+	@Test
+	public void createdMazesShouldBeEqualButShouldNotBeTheSame2(){
+		Maze maze1 = new Maze(3,3);
+		maze1.clearCell(1, 1);
+		Maze maze2 = new Maze(3,3);
+		maze2.clearCell(1, 1);
+		assertEquals(maze1,maze2);
+		assertEquals(maze2,maze1);
+		assertNotSame(maze1,maze2);
+	}
+	
+	@Test
+	public void createdMazesShouldNotBeEqualButShouldNotBeTheSame(){
+		Maze maze1 = new Maze(3,3);
+		maze1.clearCell(1, 1);
+		Maze maze2 = new Maze(3,3);
+		assertNotEquals(maze1,maze2);
+		assertNotEquals(maze2,maze1);
+		assertNotSame(maze1,maze2);
+	}
+	
+	@Test
+	public void shouldNotBeEqual(){
+		Maze maze = new Maze(2,3);
+		Object other=new Object();
+		assertNotEquals(maze, other);
+	}
+	
+	@Test
+	public void shouldNotBeEqual2(){
+		Maze maze = new Maze(2,3);
+		Maze maze2 = new Maze(3,2);
+		assertNotEquals(maze, maze2);
+		assertNotEquals(maze2, maze);
+	}
+	
+	@Test
+	public void shouldNotBeEqual3(){
+		Maze maze = new Maze(2,3);
+		Maze maze2 = new Maze(3,2);
+		assertNotEquals(maze, null);
+		assertNotEquals(maze2, null);
+	}
 }
