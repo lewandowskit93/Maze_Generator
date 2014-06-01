@@ -453,4 +453,101 @@ public class MazeDFSGeneratorTest {
 		assertNotNull(unvisitedNeighbours);
 		assertEquals(EnumSet.of(Direction.SOUTH,Direction.EAST,Direction.WEST),unvisitedNeighbours);
 	}
+	
+	@Test
+	public void shouldHaveNoUnvisitedNeighbours(){
+		Maze maze = spy(new Maze(7,7));
+		MazeDFSGenerator generator = spy(new MazeDFSGenerator(7,7));
+		generator.setMaze(maze);
+		generator.visitCell(2, 3);
+		generator.visitCell(3, 4);
+		generator.visitCell(2, 5);
+		generator.visitCell(1, 4);
+		
+		EnumSet<Direction> unvisitedNeighbours = generator.getUnvisitedNeighbours(2, 4);
+		
+		verify(maze).getNeighbours(2, 4);
+		verify(generator, times(2)).wasCellVisited(2,3);
+		verify(generator, times(2)).wasCellVisited(3, 4);
+		verify(generator, times(2)).wasCellVisited(2,5);
+		verify(generator, times(2)).wasCellVisited(1,4);
+		assertNotNull(unvisitedNeighbours);
+		assertEquals(EnumSet.noneOf(Direction.class),unvisitedNeighbours);
+	}
+	
+	@SuppressWarnings("unused")
+	private static final Object[] getSizesWithCoordinatesRandomAndAnswer(){
+		return new Object[]{
+				new Object[]{4,4,2,1,2,2,0,Direction.NORTH},
+				new Object[]{4,4,1,1,1,2,0,Direction.NORTH},
+				new Object[]{3,3,1,1,1,2,0,Direction.NORTH},
+				new Object[]{3,3,1,1,1,2,1,Direction.EAST},
+				new Object[]{3,3,1,1,1,2,2,Direction.WEST},
+				new Object[]{8,8,3,4,3,3,0,Direction.EAST},
+				new Object[]{8,8,3,4,3,3,1,Direction.SOUTH},
+				new Object[]{8,8,3,4,3,3,2,Direction.WEST}
+		};
+	}
+	
+	@Test
+	@Parameters(method = "getSizesWithCoordinatesRandomAndAnswer")
+	public void shouldReturnUnvisitedNeighbour(int width, int height, int x, int y, int vx, int vy, int rand, Direction answer){
+		Maze maze = spy(new Maze(width,height));
+		MazeDFSGenerator generator = spy(new MazeDFSGenerator(width,height));
+		Random rng = mock(Random.class);
+		generator.setRandomNumberGenerator(rng);
+		generator.setMaze(maze);
+		generator.visitCell(vx, vy);
+		when(rng.nextInt(3)).thenReturn(rand);
+		Direction unvisitedNeighbour = generator.getRandomUnvisitedNeighbours(x, y);
+		verify(generator,times(1)).getUnvisitedNeighbours(x, y);
+		assertEquals(answer,unvisitedNeighbour);
+	}
+	
+	@SuppressWarnings("unused")
+	private static final Object[] getSizesWithCoordinatesRandomAndAnswer2(){
+		return new Object[]{
+				new Object[]{4,4,2,1,2,2,1,1,0,Direction.NORTH},
+				new Object[]{4,4,1,1,1,2,2,1,0,Direction.NORTH},
+				new Object[]{3,3,1,1,1,2,0,1,0,Direction.NORTH},
+				new Object[]{3,3,1,1,1,2,2,1,1,Direction.WEST},
+				new Object[]{3,3,1,1,1,2,1,0,0,Direction.EAST},
+				new Object[]{3,3,1,1,1,2,1,0,1,Direction.WEST},
+				new Object[]{3,3,1,1,1,0,0,1,1,Direction.SOUTH},
+				new Object[]{3,3,1,1,1,0,0,1,0,Direction.EAST}
+		};
+	}
+	
+	@Test
+	@Parameters(method = "getSizesWithCoordinatesRandomAndAnswer2")
+	public void shouldReturnUnvisitedNeighbour(int width, int height, int x, int y, int vx1, int vy1,int vx2,int vy2, int rand, Direction answer){
+		Maze maze = spy(new Maze(width,height));
+		MazeDFSGenerator generator = spy(new MazeDFSGenerator(width,height));
+		Random rng = mock(Random.class);
+		generator.setRandomNumberGenerator(rng);
+		generator.setMaze(maze);
+		generator.visitCell(vx1, vy1);
+		generator.visitCell(vx2, vy2);
+		when(rng.nextInt(2)).thenReturn(rand);
+		Direction unvisitedNeighbour = generator.getRandomUnvisitedNeighbours(x, y);
+		verify(generator,times(1)).getUnvisitedNeighbours(x, y);
+		assertEquals(answer,unvisitedNeighbour);
+	}
+
+	@Test
+	public void shouldBeUnableToGetUnvisitedNeighbour(){
+		Maze maze = spy(new Maze(9,9));
+		MazeDFSGenerator generator = spy(new MazeDFSGenerator(9,9));
+		Random rng = mock(Random.class);
+		generator.setRandomNumberGenerator(rng);
+		generator.setMaze(maze);
+		generator.visitCell(7, 4);
+		generator.visitCell(8, 5);
+		generator.visitCell(7, 6);
+		generator.visitCell(6, 5);
+		verify(rng,never()).nextInt(anyInt());
+		Direction unvisitedNeighbour = generator.getRandomUnvisitedNeighbours(7,5);
+		verify(generator,times(1)).getUnvisitedNeighbours(7, 5);
+		assertNull(unvisitedNeighbour);
+	}
 }

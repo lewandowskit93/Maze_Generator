@@ -104,4 +104,10 @@ public class MazeDFSGenerator implements MazeGenerator {
 		return unvisitedNeighbours;
 	}
 
+	public Direction getRandomUnvisitedNeighbours(int x, int y) {
+		EnumSet<Direction> unvisitedNeighbours = getUnvisitedNeighbours(x, y);
+		if(unvisitedNeighbours.size()==0)return null;
+		else return (Direction) unvisitedNeighbours.toArray()[numberGenerator.nextInt(unvisitedNeighbours.size())];
+	}
+
 }
