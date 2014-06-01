@@ -6,6 +6,7 @@ import static org.mockito.Mockito.*;
 import java.util.EnumSet;
 import java.util.Random;
 import java.util.Set;
+import java.util.Stack;
 
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
@@ -549,5 +550,64 @@ public class MazeDFSGeneratorTest {
 		Direction unvisitedNeighbour = generator.getRandomUnvisitedNeighbours(7,5);
 		verify(generator,times(1)).getUnvisitedNeighbours(7, 5);
 		assertNull(unvisitedNeighbour);
+	}
+	
+	@Test
+	@Parameters(method = "getValidSizes")
+	public void shouldHaveRouteCoordinatesStack(int width, int height){
+		MazeDFSGenerator generator = new MazeDFSGenerator(width, height);
+		assertNotNull(generator.getRouteCoordinatesStack());
+	}
+	
+	@Test
+	@Parameters(method = "getValidSizes")
+	public void askingTwoTimesAboutStackShouldGiveTheSameStack(int width, int height){
+		MazeDFSGenerator generator = new MazeDFSGenerator(width, height);
+		assertSame(generator.getRouteCoordinatesStack(),generator.getRouteCoordinatesStack());
+	}
+	
+	@Test
+	public void resettingShouldHaveTheSameStack(){
+		MazeDFSGenerator generator = new MazeDFSGenerator(7,8);
+		Stack<Coordinates2D> stack1 = generator.getRouteCoordinatesStack();
+		generator.reset();
+		Stack<Coordinates2D> stack2 = generator.getRouteCoordinatesStack();
+		assertSame(stack1,stack2);
+	}
+	
+	@Test
+	public void stackShouldBeEmpty(){
+		MazeDFSGenerator generator = new MazeDFSGenerator(3, 3);
+		assertTrue(generator.getRouteCoordinatesStack().isEmpty());
+	}
+	
+	@Test
+	public void stackShouldBeEmptyAfterResetting(){
+		MazeDFSGenerator generator = new MazeDFSGenerator(3, 3);
+		generator.getRouteCoordinatesStack().add(new Coordinates2D(3, 3));
+		generator.reset();
+		assertTrue(generator.getRouteCoordinatesStack().isEmpty());
+	}
+	
+	@Test
+	public void stackShouldBeEmptyAfterSettingNewMaze(){
+		MazeDFSGenerator generator = new MazeDFSGenerator(3, 3);
+		generator.getRouteCoordinatesStack().add(new Coordinates2D(3, 3));
+		generator.setMaze(new Maze(3,3));
+		assertTrue(generator.getRouteCoordinatesStack().isEmpty());
+	}
+	
+	@Test
+	public void shouldBeAbleToSetRouteCoordinatesStack(){
+		MazeDFSGenerator generator = new MazeDFSGenerator(8, 8);
+		Stack<Coordinates2D> stack = new Stack<Coordinates2D>();
+		generator.setRouteCoordinatesStack(stack);
+		assertSame(stack,generator.getRouteCoordinatesStack());
+	}
+	
+	@Test(expected = NullPointerException.class)
+	public void shouldBeUnableToSetRouteCoordinatesStack(){
+		MazeDFSGenerator generator = new MazeDFSGenerator(2, 2);
+		generator.setRouteCoordinatesStack(null);
 	}
 }

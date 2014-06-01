@@ -4,6 +4,7 @@ import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
+import java.util.Stack;
 
 import com.github.lewandowskit93.maze.core.Cell;
 import com.github.lewandowskit93.maze.core.Coordinates2D;
@@ -19,6 +20,7 @@ public class MazeDFSGenerator implements MazeGenerator {
 	private Maze maze;
 	private HashSet<Cell> unvisitedCells;
 	private Random numberGenerator;
+	private Stack<Coordinates2D> routeCoordinatesStack;
 
 	public MazeDFSGenerator(int width, int height) {
 		if(width<=0)throw new InvalidMazeWidthException(width);
@@ -26,6 +28,7 @@ public class MazeDFSGenerator implements MazeGenerator {
 		this.width=width;
 		this.height=height;
 		this.numberGenerator=new Random();
+		this.routeCoordinatesStack=new Stack<Coordinates2D>();
 		reset();
 	}
 
@@ -63,6 +66,7 @@ public class MazeDFSGenerator implements MazeGenerator {
 		if(maze.getHeight()!=height)throw new InvalidMazeWidthException(maze.getHeight());
 		this.maze=maze;
 		unvisitedCells = new HashSet<Cell>();
+		routeCoordinatesStack.clear();
 		for(int x=0;x<maze.getWidth();++x){
 			for(int y=0;y<maze.getHeight();++y){
 				unvisitedCells.add(maze.getCell(x,y));
@@ -108,6 +112,15 @@ public class MazeDFSGenerator implements MazeGenerator {
 		EnumSet<Direction> unvisitedNeighbours = getUnvisitedNeighbours(x, y);
 		if(unvisitedNeighbours.size()==0)return null;
 		else return (Direction) unvisitedNeighbours.toArray()[numberGenerator.nextInt(unvisitedNeighbours.size())];
+	}
+
+	public Stack<Coordinates2D> getRouteCoordinatesStack() {
+		return routeCoordinatesStack;
+	}
+
+	public void setRouteCoordinatesStack(Stack<Coordinates2D> stack) {
+		if(stack==null)throw new NullPointerException("Route coordinates stack cannot be set to null.");
+		this.routeCoordinatesStack=stack;	
 	}
 
 }
