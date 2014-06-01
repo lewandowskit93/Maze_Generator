@@ -8,6 +8,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import com.github.lewandowskit93.maze.core.InvalidMazeSizeException;
+import com.github.lewandowskit93.maze.core.Maze;
 
 @RunWith(JUnitParamsRunner.class)
 public class MazeDFSGeneratorTest {
@@ -48,5 +49,39 @@ public class MazeDFSGeneratorTest {
 		MazeDFSGenerator generator = new MazeDFSGenerator(width,height);
 		assertEquals(width,generator.getWidth());
 		assertEquals(height,generator.getHeight());
+	}
+	
+	@Test
+	@Parameters(method = "getValidSizes")
+	public void shouldBeAbleToGenerateMazeOfSpecifiedSize(int width, int height){
+		MazeDFSGenerator generator = new MazeDFSGenerator(width, height);
+		Maze generated = generator.generateMaze();
+		assertEquals(width,generated.getWidth());
+		assertEquals(height,generated.getHeight());
+	}
+	
+	@Test
+	@Parameters(method = "getValidSizes")
+	public void shouldReturnPreviouslyGeneratedMaze(int width,int height){
+		MazeDFSGenerator generator = new MazeDFSGenerator(width, height);
+		assertNull(generator.getMaze());
+		Maze generated = generator.generateMaze();
+		assertEquals(width,generated.getWidth());
+		assertEquals(height,generated.getHeight());
+		assertSame(generated,generator.getMaze());
+		generated = generator.generateMaze();
+		assertEquals(width,generated.getWidth());
+		assertEquals(height,generated.getHeight());
+		assertSame(generated,generator.getMaze());
+	}
+	
+	@Test
+	@Parameters(method = "getValidSizes")
+	public void generatingMazeTwoTimesShouldGiveTwoNewMazes(int width, int height){
+		MazeDFSGenerator generator = new MazeDFSGenerator(width, height);
+		assertNull(generator.getMaze());
+		Maze generated = generator.generateMaze();
+		Maze generated2 = generator.generateMaze();
+		assertNotSame(generated,generated2);
 	}
 }
