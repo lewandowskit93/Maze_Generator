@@ -123,4 +123,22 @@ public class MazeDFSGenerator implements MazeGenerator {
 		this.routeCoordinatesStack=stack;	
 	}
 
+	public void nextStep() {
+		if(!routeCoordinatesStack.empty()){
+			Coordinates2D coordinates = routeCoordinatesStack.pop();
+			Direction direction = getRandomUnvisitedNeighbours(coordinates.getX(), coordinates.getY());
+			if(direction!=null){
+				Coordinates2D neighbourCoordinates = maze.getNeighbourCoordinates(coordinates.getX(), coordinates.getY(), direction);
+				routeCoordinatesStack.push(neighbourCoordinates);
+			}
+			else{
+				if(!routeCoordinatesStack.empty()){
+					Coordinates2D previousCoordinates = routeCoordinatesStack.pop();
+					routeCoordinatesStack.push(previousCoordinates);
+				}				
+			}
+		}
+		
+	}
+
 }

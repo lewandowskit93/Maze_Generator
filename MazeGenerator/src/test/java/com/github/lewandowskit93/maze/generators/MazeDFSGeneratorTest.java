@@ -610,4 +610,155 @@ public class MazeDFSGeneratorTest {
 		MazeDFSGenerator generator = new MazeDFSGenerator(2, 2);
 		generator.setRouteCoordinatesStack(null);
 	}
+	
+	@Test
+	public void shouldPopLastCoordinatesFromStack(){
+		MazeDFSGenerator generator = new MazeDFSGenerator(4, 4);
+		Stack<Coordinates2D> stack = spy(new Stack<Coordinates2D>());
+		stack.add(new Coordinates2D(3,3));
+		generator.setRouteCoordinatesStack(stack);
+		generator.nextStep();
+		verify(stack).empty();
+		verify(stack).pop();
+	}
+	
+	@Test
+	public void shouldNotPopLastCoordinatesFromStack(){
+		MazeDFSGenerator generator = new MazeDFSGenerator(4, 4);
+		Stack<Coordinates2D> stack = spy(new Stack<Coordinates2D>());
+		stack.add(new Coordinates2D(3,3));
+		generator.setRouteCoordinatesStack(stack);
+		doReturn(true).when(stack).empty();
+		generator.nextStep();
+		verify(stack).empty();
+		verify(stack,never()).pop();
+	}
+	
+	
+	@SuppressWarnings("unused")
+	private static final Object[] getValidSizesWithValidCoordinates2(){
+		return new Object[]{
+			new Object[]{1,3,0,1},
+			new Object[]{3,1,2,0},
+			new Object[]{16,16,7,7}
+		};
+	}
+	
+	@Test
+	@Parameters(method ="getValidSizesWithValidCoordinates2")
+	public void shouldAskForRandomNeighbourOfCell(int width, int height, int x, int y){
+		MazeDFSGenerator generator = spy(new MazeDFSGenerator(width, height));
+		Stack<Coordinates2D> stack = spy(new Stack());
+		stack.add(new Coordinates2D(x,y));
+		generator.setRouteCoordinatesStack(stack);
+		generator.nextStep();
+		verify(stack).empty();
+		verify(generator).getRandomUnvisitedNeighbours(x, y);
+	}
+	
+	@Test
+	@Parameters(method ="getValidSizesWithValidCoordinates2")
+	public void shouldNotAskForRandomNeighbourOfCell(int width, int height, int x, int y){
+		MazeDFSGenerator generator = spy(new MazeDFSGenerator(width, height));
+		Stack<Coordinates2D> stack = mock(Stack.class);
+		when(stack.empty()).thenReturn(true);
+		generator.setRouteCoordinatesStack(stack);
+		generator.nextStep();
+		verify(stack).empty();
+		verify(generator, never()).getRandomUnvisitedNeighbours(anyInt(), anyInt());
+	}
+	
+	@Test
+	@Parameters(method ="getValidSizesWithValidCoordinates2")
+	public void nextStepShouldBeCalledOnce(int width, int height, int x, int y){
+		MazeDFSGenerator generator = spy(new MazeDFSGenerator(width, height));
+		generator.getRouteCoordinatesStack().push(new Coordinates2D(x,y));
+		generator.nextStep();
+		verify(generator).nextStep();
+	}
+	
+	private static final Object[] getSizesAndCoordinatesWithNeighboursToVisit(){
+		return new Object[]{
+			new Object[]{7,7,3,2,2,2,Direction.WEST},
+			new Object[]{8,4,1,1,2,1,Direction.EAST},
+			new Object[]{7,7,3,3,3,2,Direction.NORTH},
+			new Object[]{7,7,3,3,3,4,Direction.SOUTH}
+		};
+	}
+	
+	@Test
+	@Parameters(method = "getSizesAndCoordinatesWithNeighboursToVisit")
+	public void shoulAskForNeighbourCoordinates(int width, int height, int x, int y, int nx, int ny, Direction direction){
+		MazeDFSGenerator generator = spy(new MazeDFSGenerator(width,height));
+		Maze maze = spy(new Maze(width,height));
+		generator.setMaze(maze);
+		doReturn(direction).when(generator).getRandomUnvisitedNeighbours(x, y);
+		generator.getRouteCoordinatesStack().push(new Coordinates2D(x,y));
+		generator.nextStep();
+		verify(maze).getNeighbourCoordinates(x, y, direction);
+	}
+	
+	@Test
+	@Parameters(method = "getSizesAndCoordinatesWithNeighboursToVisit")
+	public void shouldNotAskForNeighbourCoordinates(int width, int height, int x, int y, int nx, int ny, Direction direction){
+		MazeDFSGenerator generator = spy(new MazeDFSGenerator(width,height));
+		Maze maze = spy(new Maze(width,height));
+		generator.setMaze(maze);
+		doReturn(null).when(generator).getRandomUnvisitedNeighbours(x, y);
+		generator.getRouteCoordinatesStack().push(new Coordinates2D(x,y));
+		generator.nextStep();
+		verify(maze,never()).getNeighbourCoordinates(x, y, direction);
+	}
+	
+	@Test
+	@Parameters(method = "getSizesAndCoordinatesWithNeighboursToVisit")
+	public void shouldPushNeighbourCoordinates(int width, int height, int x, int y, int nx, int ny, Direction direction){
+		MazeDFSGenerator generator = spy(new MazeDFSGenerator(width,height));
+		Maze maze = spy(new Maze(width,height));
+		Stack<Coordinates2D> stack = spy(new Stack<Coordinates2D>());
+		generator.setRouteCoordinatesStack(stack);
+		generator.setMaze(maze);
+		doReturn(direction).when(generator).getRandomUnvisitedNeighbours(x, y);
+		generator.getRouteCoordinatesStack().push(new Coordinates2D(x,y));
+		generator.nextStep();
+		verify(stack).push(new Coordinates2D(nx,ny));
+	}
+	
+	@Test
+	@Parameters(method = "getSizesAndCoordinatesWithNeighboursToVisit")
+	public void shouldNotPushNeighbourCoordinates(int width, int height, int x, int y, int nx, int ny, Direction direction){
+		MazeDFSGenerator generator = spy(new MazeDFSGenerator(width,height));
+		Maze maze = spy(new Maze(width,height));
+		Stack<Coordinates2D> stack = spy(new Stack<Coordinates2D>());
+		generator.setRouteCoordinatesStack(stack);
+		generator.setMaze(maze);
+		doReturn(null).when(generator).getRandomUnvisitedNeighbours(x, y);
+		generator.getRouteCoordinatesStack().push(new Coordinates2D(x,y));
+		generator.nextStep();
+		verify(stack,times(1)).push(any(Coordinates2D.class));
+	}
+	
+	private static final Object[] getSizesAndCoordinatesWithPrevious(){
+		return new Object[]{
+			new Object[]{7,7,3,2,2,2},
+			new Object[]{8,4,1,1,2,1},
+			new Object[]{7,7,3,3,3,2},
+			new Object[]{7,7,3,3,3,4}
+		};
+	}
+	
+	@Test
+	@Parameters(method = "getSizesAndCoordinatesWithPrevious")
+	public void shouldPushPreviousCoordinates(int width, int height, int x, int y, int px, int py){
+		MazeDFSGenerator generator = spy(new MazeDFSGenerator(width,height));
+		Maze maze = spy(new Maze(width,height));
+		Stack<Coordinates2D> stack = spy(new Stack<Coordinates2D>());
+		generator.setRouteCoordinatesStack(stack);
+		generator.setMaze(maze);
+		doReturn(null).when(generator).getRandomUnvisitedNeighbours(x, y);
+		generator.getRouteCoordinatesStack().push(new Coordinates2D(px,py));
+		generator.getRouteCoordinatesStack().push(new Coordinates2D(x,y));
+		generator.nextStep();
+		verify(stack,times(2)).push(new Coordinates2D(px,py));
+	}
 }
