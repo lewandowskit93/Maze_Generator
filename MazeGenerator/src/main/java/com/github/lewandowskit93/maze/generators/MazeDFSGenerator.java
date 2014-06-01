@@ -50,7 +50,13 @@ public class MazeDFSGenerator implements MazeGenerator {
 	}
 
 	public void reset() {
-		maze=new Maze(width,height);
+		setMaze(new Maze(width,height));
+	}
+
+	public void setMaze(Maze maze) {
+		if(maze.getWidth()!=width)throw new InvalidMazeWidthException(maze.getWidth());
+		if(maze.getHeight()!=height)throw new InvalidMazeWidthException(maze.getHeight());
+		this.maze=maze;
 		unvisitedCells = new HashSet<Cell>();
 		for(int x=0;x<maze.getWidth();++x){
 			for(int y=0;y<maze.getHeight();++y){

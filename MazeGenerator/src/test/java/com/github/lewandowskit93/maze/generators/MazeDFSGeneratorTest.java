@@ -186,4 +186,49 @@ public class MazeDFSGeneratorTest {
 			}
 		}
 	}
+	
+	@Test
+	public void shouldBeAbleToSetMaze(){
+		MazeDFSGenerator generator = new MazeDFSGenerator(4, 7);
+		Maze maze = new Maze(4,7);
+		generator.setMaze(maze);
+		assertSame(maze,generator.getMaze());
+	}
+	
+	private static final Object[] getMazesWithWrongSizes(){
+		return new Object[]{
+			new Object[]{0,3,new Maze(3,7)},
+			new Object[]{0,9,new Maze(3,7)},
+			new Object[]{0,0,new Maze(3,7)},
+			new Object[]{6,3,new Maze(5,4)},
+			new Object[]{4,0,new Maze(5,4)},
+			new Object[]{4,10,new Maze(5,4)},
+			new Object[]{-1,-1,new Maze(5,4)},
+			new Object[]{10,10,new Maze(5,4)},
+			new Object[]{12,14,new Maze(11,13)}
+		};
+	}
+	
+	@Test(expected = InvalidMazeSizeException.class)
+	@Parameters(method = "getMazesWithWrongSizes")
+	public void shouldNotBeAbleToSetMaze(int width, int height, Maze maze){
+		MazeDFSGenerator generator = new MazeDFSGenerator(4, 7);
+		generator.setMaze(maze);
+	}
+	
+	@Test
+	public void settingNewMazeShouldResetVisitedCells(){
+		MazeDFSGenerator generator = new MazeDFSGenerator(4,3);
+		for(int y = 0; y<3;++y){
+			for(int x=0;x<4;++x){
+				generator.visitCell(x, y);
+			}
+		}
+		generator.setMaze(new Maze(4,3));
+		for(int y=0;y<3;++y){
+			for(int x=0;x<4;++x){
+				assertFalse(generator.wasCellVisited(x, y));
+			}
+		}
+	}
 }
