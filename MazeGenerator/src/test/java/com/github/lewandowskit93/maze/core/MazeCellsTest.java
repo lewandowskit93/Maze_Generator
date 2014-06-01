@@ -1115,7 +1115,7 @@ public class MazeCellsTest {
 	}
 	
 	@Test
-	public void createdMazesShouldNotBeEqualButShouldNotBeTheSame(){
+	public void createdMazesShouldNotBeEqualAndShouldNotBeTheSame(){
 		Maze maze1 = new Maze(3,3);
 		maze1.clearCell(1, 1);
 		Maze maze2 = new Maze(3,3);
@@ -1145,5 +1145,125 @@ public class MazeCellsTest {
 		Maze maze2 = new Maze(3,2);
 		assertNotEquals(maze, null);
 		assertNotEquals(maze2, null);
+	}
+	
+	@SuppressWarnings("unused")
+	private static final Object[] getStartCoordinates(){
+		return new Object[]{
+				new Object[]{1,0},
+				new Object[]{2,1},
+				new Object[]{0,1},
+				new Object[]{1,1},
+				new Object[]{2,1},
+				new Object[]{0,2},
+				new Object[]{1,2},
+				new Object[]{2,2}
+		};
+	}
+	
+	@Test
+	@Parameters(method = "getStartCoordinates")
+	public void similarMazesWithDifferentStartCoordinatesShouldNotBeEqual(int x, int y){
+		Maze maze1 = new Maze(3,3);
+		Maze maze2 = new Maze(3,3);
+		maze1.setStartCoordinates(x,y);
+		assertNotEquals(maze1,maze2);
+		assertNotEquals(maze2,maze1);
+	}
+	
+	@SuppressWarnings("unused")
+	private static final Object[] getFinishCoordinates(){
+		return new Object[]{
+				new Object[]{0,0},
+				new Object[]{1,0},
+				new Object[]{2,1},
+				new Object[]{0,1},
+				new Object[]{1,1},
+				new Object[]{2,1},
+				new Object[]{0,2},
+				new Object[]{1,2}
+		};
+	}
+	
+	@Test
+	@Parameters(method = "getFinishCoordinates")
+	public void similarMazesWithDifferentFinishCoordinatesShouldNotBeEqual(int x, int y){
+		Maze maze1 = new Maze(3,3);
+		Maze maze2 = new Maze(3,3);
+		maze1.setFinishCoordinates(x,y);
+		assertNotEquals(maze1,maze2);
+		assertNotEquals(maze2,maze1);
+	}
+	
+	@Test
+	public void shouldHaveStartCoordinates(){
+		Maze maze = new Maze(2,3);
+		Maze maze2 = new Maze(1,1, new Cell[][]{
+										{new Cell()}
+									});
+		assertNotNull(maze.getStartCoordinates());
+		assertNotNull(maze2.getStartCoordinates());
+	}
+	
+	@Test
+	public void shouldHaveEndCoordinates(){
+		Maze maze = new Maze(2,3);
+		Maze maze2 = new Maze(1,1, new Cell[][]{
+										{new Cell()}
+									});
+		assertNotNull(maze.getFinishCoordinates());
+		assertNotNull(maze2.getFinishCoordinates());
+	}
+	
+	@Test
+	public void askingTwoTimesAboutStartShouldReturnTheSameCoordinates(){
+		Maze maze = new Maze(3,3);
+		Coordinates2D coords1 = maze.getStartCoordinates();
+		Coordinates2D coords2 = maze.getStartCoordinates();
+		assertSame(coords1,coords2);
+	}
+	
+	@Test
+	public void askingTwoTimesAboutFinishShouldReturnTheSameCoordinates(){
+		Maze maze = new Maze(3,3);
+		Coordinates2D coords1 = maze.getFinishCoordinates();
+		Coordinates2D coords2 = maze.getFinishCoordinates();
+		assertSame(coords1,coords2);
+	}
+	
+	@Test
+	@Parameters(method = "getSizeAndCellsWithValidCoordinates")
+	public void shouldBeAbleToSetStartCoordinates(int width, int height, Cell[][] cells, int x, int y){
+		Maze maze = new Maze(width,height,cells);
+		Coordinates2D coords = new Coordinates2D(x,y);
+		maze.setStartCoordinates(x,y);
+		assertEquals(coords,maze.getStartCoordinates());
+	}
+	
+	@Test
+	@Parameters(method = "getSizeAndCellsWithValidCoordinates")
+	public void shouldBeAbleToSetFinishCoordinates(int width, int height, Cell[][] cells, int x, int y){
+		Maze maze = new Maze(width, height, cells);
+		Coordinates2D coords = new Coordinates2D(x,y);
+		maze.setFinishCoordinates(x,y);
+		assertEquals(coords,maze.getFinishCoordinates());
+	}
+	
+	@Test(expected = InvalidCellCoordinatesException.class)
+	@Parameters(method = "getSizeAndCellsWithInvalidCoordinates")
+	public void shouldBeUnableToSetStartCoordinates(int width, int height, Cell[][] cells, int x, int y){
+		Maze maze = new Maze(width,height,cells);
+		Coordinates2D coords = new Coordinates2D(x,y);
+		maze.setStartCoordinates(x,y);
+		assertEquals(coords,maze.getStartCoordinates());
+	}
+	
+	@Test(expected = InvalidCellCoordinatesException.class)
+	@Parameters(method = "getSizeAndCellsWithInvalidCoordinates")
+	public void shouldBeUnableToSetFinishCoordinates(int width, int height, Cell[][] cells, int x, int y){
+		Maze maze = new Maze(width,height,cells);
+		Coordinates2D coords = new Coordinates2D(x,y);
+		maze.setFinishCoordinates(x, y);
+		assertEquals(coords,maze.getFinishCoordinates());
 	}
 }

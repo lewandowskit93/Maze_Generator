@@ -29,4 +29,12 @@ public class Coordinates2D {
 		this.y = y;
 	}
 	
+	@Override
+	public boolean equals(Object obj) {
+		if(obj==null)return false;
+		if(!(obj instanceof Coordinates2D))return false;
+		Coordinates2D other = (Coordinates2D) obj;
+		if(x!=other.x || y!=other.y)return false;
+		return true;
+	}
 }

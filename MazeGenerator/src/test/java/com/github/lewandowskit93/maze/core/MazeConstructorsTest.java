@@ -422,4 +422,44 @@ public class MazeConstructorsTest {
 		@SuppressWarnings("unused")
 		Maze maze = new Maze(width,height,cells);
 	}
+	
+	@Test
+	public void shouldHaveDefaultStartCoordinates(){
+		Maze maze = new Maze(2,3);
+		assertEquals(new Coordinates2D(0,0),maze.getStartCoordinates());
+	}
+	
+	@Test
+	@Parameters(method = "getValidMazeSizes")
+	public void shouldHaveDefaultStartCoordinates2(int width, int height){
+		Maze maze = new Maze(width,height);
+		assertEquals(new Coordinates2D(0,0),maze.getStartCoordinates());
+	}
+	
+	@Test
+	@Parameters(method = "getValidSizeAndCells")
+	public void shouldHaveDefaultStartCoordinates2(int width, int height, Cell[][] cells){
+		Maze maze = new Maze(width,height,cells);
+		assertEquals(new Coordinates2D(0,0),maze.getStartCoordinates());
+	}
+	
+	@Test
+	public void shouldHaveDefaultFinishCoordinates(){
+		Maze maze = new Maze(2,3);
+		assertEquals(new Coordinates2D(1,2),maze.getFinishCoordinates());
+	}
+	
+	@Test
+	@Parameters(method = "getValidMazeSizes")
+	public void shouldHaveDefaultFinishCoordinates2(int width, int height){
+		Maze maze = new Maze(width,height);
+		assertEquals(new Coordinates2D(width-1,height-1),maze.getFinishCoordinates());
+	}
+	
+	@Test
+	@Parameters(method = "getValidSizeAndCells")
+	public void shouldHaveDefaultFinishCoordinates2(int width, int height, Cell[][] cells){
+		Maze maze = new Maze(width,height,cells);
+		assertEquals(new Coordinates2D(width-1,height-1),maze.getFinishCoordinates());
+	}
 }

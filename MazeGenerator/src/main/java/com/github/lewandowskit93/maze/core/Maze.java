@@ -6,6 +6,7 @@ public class Maze {
 
 	private int width,height;
 	private Cell[][] cells;
+	private Coordinates2D startCoordinates,finishCoordinates;
 	
 	public Maze(int width, int height) throws
 	InvalidMazeWidthException, InvalidMazeHeightException
@@ -15,6 +16,8 @@ public class Maze {
 		this.width=width;
 		this.height=height;
 		cells=createCellsArray(width,height);
+		this.startCoordinates=new Coordinates2D(0, 0);
+		this.finishCoordinates=new Coordinates2D(width-1,height-1);
 	}
 
 	public Maze(int width, int height, Cell[][] cells) throws 
@@ -30,6 +33,8 @@ public class Maze {
 		this.width=width;
 		this.height=height;
 		this.cells=cells;
+		this.startCoordinates=new Coordinates2D(0, 0);
+		this.finishCoordinates=new Coordinates2D(width-1,height-1);
 	}
 
 	public int getWidth() {
@@ -207,11 +212,33 @@ public class Maze {
 		if(!(obj instanceof Maze))return false;
 		Maze other = (Maze) obj;
 		if(!(width==other.width && height==other.height))return false;
+		if(!startCoordinates.equals(other.startCoordinates))return false;
+		if(!finishCoordinates.equals(other.finishCoordinates))return false;
 		for(int x=0;x<width;++x){
 			for(int y=0;y<height;++y){
 				if(!getCell(x, y).equals(other.getCell(x, y)))return false;
 			}
 		}
 		return true;
+	}
+
+	public Coordinates2D getStartCoordinates() {
+		return startCoordinates;
+	}
+
+	public void setStartCoordinates(int x, int y) throws InvalidCellCoordinatesException{
+		if(x<0 || x>=width || y<0 || y>=height)throw new InvalidCellCoordinatesException(x,y);
+		startCoordinates.setX(x);
+		startCoordinates.setY(y);	
+	}
+
+	public Coordinates2D getFinishCoordinates() {
+		return finishCoordinates;
+	}
+
+	public void setFinishCoordinates(int x, int y) throws InvalidCellCoordinatesException {
+		if(x<0 || x>= width || y<0 || y>=height) throw new InvalidCellCoordinatesException(x, y);
+		finishCoordinates.setX(x);
+		finishCoordinates.setY(y);
 	}
 }
