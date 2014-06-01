@@ -34,6 +34,10 @@ public class MazeDFSGenerator implements MazeGenerator {
 
 	@Override
 	public Maze generateMaze() {
+		routeCoordinatesStack.push(getRandomCellCoordinates());
+		while(getNumberOfUnvisitedCells()>0){
+			nextStep();
+		}
 		return maze;
 	}
 
@@ -140,7 +144,6 @@ public class MazeDFSGenerator implements MazeGenerator {
 				}
 			}
 		}
-		
 	}
 
 }

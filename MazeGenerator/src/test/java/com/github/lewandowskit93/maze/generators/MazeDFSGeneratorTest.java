@@ -14,6 +14,8 @@ import junitparams.Parameters;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+
+
 import com.github.lewandowskit93.maze.core.Cell;
 import com.github.lewandowskit93.maze.core.Coordinates2D;
 import com.github.lewandowskit93.maze.core.Direction;
@@ -65,7 +67,8 @@ public class MazeDFSGeneratorTest {
 	@Test
 	@Parameters(method = "getValidSizes")
 	public void shouldBeAbleToGenerateMazeOfSpecifiedSize(int width, int height){
-		MazeDFSGenerator generator = new MazeDFSGenerator(width, height);
+		MazeDFSGenerator generator = spy(new MazeDFSGenerator(width, height));
+		when(generator.getNumberOfUnvisitedCells()).thenReturn(0);
 		Maze generated = generator.generateMaze();
 		assertEquals(width,generated.getWidth());
 		assertEquals(height,generated.getHeight());
@@ -74,7 +77,8 @@ public class MazeDFSGeneratorTest {
 	@Test
 	@Parameters(method = "getValidSizes")
 	public void shouldReturnPreviouslyGeneratedMaze(int width,int height){
-		MazeDFSGenerator generator = new MazeDFSGenerator(width, height);
+		MazeDFSGenerator generator = spy(new MazeDFSGenerator(width, height));
+		when(generator.getNumberOfUnvisitedCells()).thenReturn(0);
 		Maze generated = generator.generateMaze();
 		assertEquals(width,generated.getWidth());
 		assertEquals(height,generated.getHeight());
@@ -88,7 +92,8 @@ public class MazeDFSGeneratorTest {
 	@Test
 	@Parameters(method = "getValidSizes")
 	public void generatingMazeTwoTimesWithoutResettingShouldGiveTheSameMazes(int width, int height){
-		MazeDFSGenerator generator = new MazeDFSGenerator(width, height);
+		MazeDFSGenerator generator = spy(new MazeDFSGenerator(width, height));
+		when(generator.getNumberOfUnvisitedCells()).thenReturn(0);
 		Maze generated = generator.generateMaze();
 		Maze generated2 = generator.generateMaze();
 		assertSame(generated,generated2);
@@ -97,7 +102,8 @@ public class MazeDFSGeneratorTest {
 	@Test
 	@Parameters(method = "getValidSizes")
 	public void generatingMazeTwoTimesWithResettingShouldGiveTwoNewMazes(int width, int height){
-		MazeDFSGenerator generator = new MazeDFSGenerator(width,height);
+		MazeDFSGenerator generator = spy(new MazeDFSGenerator(width,height));
+		when(generator.getNumberOfUnvisitedCells()).thenReturn(0);
 		Maze generated = generator.generateMaze();
 		generator.reset();
 		Maze generated2 = generator.generateMaze();
@@ -131,7 +137,8 @@ public class MazeDFSGeneratorTest {
 	
 	@Test
 	public void resettingGeneratorShouldCreateEmptyMaze(){
-		MazeDFSGenerator generator = new MazeDFSGenerator(3, 4);
+		MazeDFSGenerator generator = spy(new MazeDFSGenerator(3, 4));
+		when(generator.getNumberOfUnvisitedCells()).thenReturn(0);
 		Maze maze = generator.generateMaze();
 		generator.reset();
 		assertNotSame(maze,generator.getMaze());
@@ -358,6 +365,7 @@ public class MazeDFSGeneratorTest {
 	@Test
 	public void generatingMazeShouldNotResetIt(){
 		MazeDFSGenerator generator = spy(new MazeDFSGenerator(3,3));
+		when(generator.getNumberOfUnvisitedCells()).thenReturn(0);
 		generator.generateMaze();
 		verify(generator,never()).reset();
 	}
@@ -787,5 +795,44 @@ public class MazeDFSGeneratorTest {
 		generator.getRouteCoordinatesStack().push(new Coordinates2D(x,y));
 		generator.nextStep();
 		verify(generator, atLeastOnce()).visitCell(x, y);
+	}
+	
+	@Test
+	public void shouldInvokeNextStepTwoTimes(){
+		MazeDFSGenerator generator = spy(new MazeDFSGenerator(8, 8));
+		when(generator.getNumberOfUnvisitedCells()).thenReturn(2).thenReturn(1).thenReturn(0);
+		generator.generateMaze();
+		verify(generator,times(2)).nextStep();
+	}
+	
+	@Test
+	public void shouldInvokeNextThreeTwoTimes(){
+		MazeDFSGenerator generator = spy(new MazeDFSGenerator(8, 8));
+		when(generator.getNumberOfUnvisitedCells()).thenReturn(2).thenReturn(2).thenReturn(1).thenReturn(0);
+		generator.generateMaze();
+		verify(generator,times(3)).nextStep();
+	}
+	
+	@SuppressWarnings("unused")
+	private static final Object[] getValidSizesWithValidCoordinates3(){
+		return new Object[]{
+			new Object[]{8,8,3,3},
+			new Object[]{11,13,9,11},
+			new Object[]{8,8,0,0},
+			new Object[]{8,8,7,7}
+		};
+	}
+	
+	@Test
+	@Parameters(method = "getValidSizesWithValidCoordinates3")
+	public void shouldAskForRandomCellCoordinatesAndPushItToTheStack(int width, int height, int x, int y){
+		MazeDFSGenerator generator = spy(new MazeDFSGenerator(width, height));
+		Stack<Coordinates2D> stack = spy(new Stack<Coordinates2D>());
+		generator.setRouteCoordinatesStack(stack);
+		when(generator.getNumberOfUnvisitedCells()).thenReturn(0);
+		when(generator.getRandomCellCoordinates()).thenReturn(new Coordinates2D(x,y));
+		generator.generateMaze();
+		verify(generator).getRandomCellCoordinates();
+		verify(stack).push(new Coordinates2D(x,y));
 	}
 }
