@@ -133,6 +133,7 @@ public class MazeDFSGenerator implements MazeGenerator {
 			visitCell(coordinates.getX(), coordinates.getY());
 			Direction direction = getRandomUnvisitedNeighbours(coordinates.getX(), coordinates.getY());
 			if(direction!=null){
+				routeCoordinatesStack.push(coordinates);
 				Coordinates2D neighbourCoordinates = maze.getNeighbourCoordinates(coordinates.getX(), coordinates.getY(), direction);
 				routeCoordinatesStack.push(neighbourCoordinates);
 				maze.removeWall(coordinates.getX(), coordinates.getY(), direction);

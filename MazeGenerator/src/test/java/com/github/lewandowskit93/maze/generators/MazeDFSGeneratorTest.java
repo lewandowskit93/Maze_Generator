@@ -835,4 +835,16 @@ public class MazeDFSGeneratorTest {
 		verify(generator).getRandomCellCoordinates();
 		verify(stack).push(new Coordinates2D(x,y));
 	}
+	
+	@Test
+	@Parameters(method = "getSizesAndCoordinatesWithNeighboursToVisit")
+	public void shouldPushItselfToTheStack(int width, int height, int x, int y, int nx, int ny, Direction direction){
+		MazeDFSGenerator generator = spy(new MazeDFSGenerator(width,height));
+		Stack<Coordinates2D> stack = spy(new Stack<Coordinates2D>());
+		generator.setRouteCoordinatesStack(stack);
+		doReturn(direction).when(generator).getRandomUnvisitedNeighbours(x, y);
+		generator.getRouteCoordinatesStack().push(new Coordinates2D(x,y));
+		generator.nextStep();
+		verify(stack,times(2)).push(new Coordinates2D(x,y));
+	}
 }

@@ -9,7 +9,7 @@ import java.util.HashMap;
 import javax.swing.JApplet;
 
 import com.github.lewandowskit93.maze.core.Direction;
-import com.github.lewandowskit93.maze.core.Maze;
+import com.github.lewandowskit93.maze.generators.MazeDFSGenerator;
 
 public class MazeApplet extends JApplet implements MazeTilesLoader{
 
@@ -23,9 +23,10 @@ public class MazeApplet extends JApplet implements MazeTilesLoader{
 	public void init() {
 		super.init();
 		setBackground(Color.BLACK);
-		setSize(800,600);
-		mazePanel = new MazePanel(640,320,true);
-		mazePanel.setMaze(new Maze(80,80));
+		setSize(600,600);
+		MazeDFSGenerator generator = new MazeDFSGenerator(15, 15);
+		mazePanel = new MazePanel(320,320,true);
+		mazePanel.setMaze(generator.generateMaze());
 		mazePanel.setMazeTiles(loadTiles());
 		add(mazePanel);
 		setVisible(true);
