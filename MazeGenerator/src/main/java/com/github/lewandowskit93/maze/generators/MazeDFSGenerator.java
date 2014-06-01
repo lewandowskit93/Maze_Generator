@@ -1,9 +1,11 @@
 package com.github.lewandowskit93.maze.generators;
 
 import java.util.HashSet;
+import java.util.Random;
 import java.util.Set;
 
 import com.github.lewandowskit93.maze.core.Cell;
+import com.github.lewandowskit93.maze.core.Coordinates2D;
 import com.github.lewandowskit93.maze.core.InvalidMazeHeightException;
 import com.github.lewandowskit93.maze.core.InvalidMazeWidthException;
 import com.github.lewandowskit93.maze.core.Maze;
@@ -14,12 +16,14 @@ public class MazeDFSGenerator implements MazeGenerator {
 	private int width,height;
 	private Maze maze;
 	private HashSet<Cell> unvisitedCells;
+	private Random numberGenerator;
 
 	public MazeDFSGenerator(int width, int height) {
 		if(width<=0)throw new InvalidMazeWidthException(width);
 		if(height<=0)throw new InvalidMazeHeightException(height);
 		this.width=width;
 		this.height=height;
+		this.numberGenerator=new Random();
 		reset();
 	}
 
@@ -70,6 +74,20 @@ public class MazeDFSGenerator implements MazeGenerator {
 
 	public Set<Cell> getUnvisitedCells() {
 		return unvisitedCells;
+	}
+
+	public Random getRandomNumberGenerator() {
+		return numberGenerator;
+	}
+
+	public void setRandomNumberGenerator(Random numberGenerator) throws NullPointerException{
+		if(numberGenerator==null)throw new NullPointerException("Random number generator cant be set to null.");
+		this.numberGenerator=numberGenerator;
+		
+	}
+
+	public Coordinates2D getRandomCellCoordinates() {
+		return new Coordinates2D(numberGenerator.nextInt(width),numberGenerator.nextInt(height));
 	}
 
 }

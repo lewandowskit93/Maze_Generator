@@ -4,11 +4,11 @@ public class Coordinates2D {
 	
 	private int x,y;
 	
-	Coordinates2D(){
+	public Coordinates2D(){
 		this(0,0);
 	}
 	
-	Coordinates2D(int x, int y){
+	public Coordinates2D(int x, int y){
 		this.x=x;
 		this.y=y;
 	}

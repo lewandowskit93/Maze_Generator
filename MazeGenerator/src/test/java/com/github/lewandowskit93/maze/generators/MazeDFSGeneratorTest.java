@@ -3,6 +3,7 @@ package com.github.lewandowskit93.maze.generators;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
+import java.util.Random;
 import java.util.Set;
 
 import junitparams.JUnitParamsRunner;
@@ -12,6 +13,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import com.github.lewandowskit93.maze.core.Cell;
+import com.github.lewandowskit93.maze.core.Coordinates2D;
 import com.github.lewandowskit93.maze.core.InvalidCellCoordinatesException;
 import com.github.lewandowskit93.maze.core.InvalidMazeSizeException;
 import com.github.lewandowskit93.maze.core.Maze;
@@ -364,4 +366,70 @@ public class MazeDFSGeneratorTest {
 		verify(generator).setMaze(any(Maze.class));
 	}
 	
+	@Test
+	public void shouldHaveRandomNumberGenerator(){
+		MazeDFSGenerator generator = new MazeDFSGenerator(10,10);
+		assertNotNull(generator.getRandomNumberGenerator());
+	}
+	
+	@Test
+	public void askingTwoTimesAboutNumberGeneratorShouldGiveTheSameGenerator(){
+		MazeDFSGenerator generator = new MazeDFSGenerator(10, 10);
+		Random r1 = generator.getRandomNumberGenerator();
+		Random r2 = generator.getRandomNumberGenerator();
+		assertSame(r1,r2);
+	}
+	
+	@Test
+	public void shouldBeAbleToSetRandomNumberGenerator(){
+		MazeDFSGenerator generator = new MazeDFSGenerator(10, 10);
+		Random r = new Random();
+		generator.setRandomNumberGenerator(r);
+		assertSame(r,generator.getRandomNumberGenerator());
+	}
+	
+	@Test(expected = NullPointerException.class)
+	public void shouldBeUnableToSetRandomNumberGenerator(){
+		MazeDFSGenerator generator = new MazeDFSGenerator(10, 10);
+		generator.setRandomNumberGenerator(null);
+	}
+	
+	@SuppressWarnings("unused")
+	private static final Object[] getSizesWithTwoCellsCoordinates(){
+		return new Object[]{
+				new Object[]{10,12,7,3,9,0},
+				new Object[]{1,1,0,0,0,0},
+				new Object[]{10,12,2,9,9,9},
+				new Object[]{3,4,2,3,0,0},
+				new Object[]{3,4,2,1,1,1}
+		};
+	}
+	
+	@Test
+	public void shouldBeAbleToGetRandomCellCoordinates(){
+		MazeDFSGenerator generator = new MazeDFSGenerator(10,10);
+		assertNotNull(generator.getRandomCellCoordinates());
+	}
+	
+	@Test
+	@Parameters(method = "getSizesWithTwoCellsCoordinates")
+	public void shouldBeAbleToGetRandomCellCoordinatesWithEqualCoordinates(int width, int height, int x1, int y1, int x2, int y2){
+		MazeDFSGenerator generator = new MazeDFSGenerator(width,height);
+		Random rng = mock(Random.class);
+		when(rng.nextInt(width)).thenReturn(x1).thenReturn(x2);
+		when(rng.nextInt(height)).thenReturn(y1).thenReturn(y2);
+		generator.setRandomNumberGenerator(rng);
+		Coordinates2D coords1 = generator.getRandomCellCoordinates();
+		assertEquals(new Coordinates2D(x1,y1),coords1);
+		Coordinates2D coords2 = generator.getRandomCellCoordinates();
+		assertEquals(new Coordinates2D(x2,y2),coords2);
+	}
+	
+	@Test
+	public void askingTwoTimesAboutRandomCellShouldReturnTwoNewCells(){
+		MazeDFSGenerator generator = new MazeDFSGenerator(10,10);
+		Coordinates2D coords1 = generator.getRandomCellCoordinates();
+		Coordinates2D coords2 = generator.getRandomCellCoordinates();
+		assertNotSame(coords1,coords2);
+	}
 }
