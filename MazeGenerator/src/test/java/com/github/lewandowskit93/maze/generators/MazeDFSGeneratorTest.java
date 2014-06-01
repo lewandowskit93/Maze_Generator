@@ -1,6 +1,7 @@
 package com.github.lewandowskit93.maze.generators;
 
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 
 import java.util.Set;
 
@@ -124,7 +125,7 @@ public class MazeDFSGeneratorTest {
 	}
 	
 	@Test
-	public void resetingGeneratorShouldCreateEmptyMaze(){
+	public void resettingGeneratorShouldCreateEmptyMaze(){
 		MazeDFSGenerator generator = new MazeDFSGenerator(3, 4);
 		Maze maze = generator.generateMaze();
 		generator.reset();
@@ -347,6 +348,20 @@ public class MazeDFSGeneratorTest {
 		Set<Cell> unvisitedCells3 = generator.getUnvisitedCells();
 		assertSame(unvisitedCells1,unvisitedCells3);
 		
+	}
+	
+	@Test
+	public void generatingMazeShouldNotResetIt(){
+		MazeDFSGenerator generator = spy(new MazeDFSGenerator(3,3));
+		generator.generateMaze();
+		verify(generator,never()).reset();
+	}
+	
+	@Test
+	public void resettingMazeShouldSetNewMaze(){
+		MazeDFSGenerator generator = spy(new MazeDFSGenerator(4,4));
+		generator.reset();
+		verify(generator).setMaze(any(Maze.class));
 	}
 	
 }
