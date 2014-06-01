@@ -3,6 +3,7 @@ package com.github.lewandowskit93.maze.generators;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
+import java.util.EnumSet;
 import java.util.Random;
 import java.util.Set;
 
@@ -14,6 +15,7 @@ import org.junit.runner.RunWith;
 
 import com.github.lewandowskit93.maze.core.Cell;
 import com.github.lewandowskit93.maze.core.Coordinates2D;
+import com.github.lewandowskit93.maze.core.Direction;
 import com.github.lewandowskit93.maze.core.InvalidCellCoordinatesException;
 import com.github.lewandowskit93.maze.core.InvalidMazeSizeException;
 import com.github.lewandowskit93.maze.core.Maze;
@@ -431,5 +433,24 @@ public class MazeDFSGeneratorTest {
 		Coordinates2D coords1 = generator.getRandomCellCoordinates();
 		Coordinates2D coords2 = generator.getRandomCellCoordinates();
 		assertNotSame(coords1,coords2);
+	}
+	
+	@Test
+	public void shouldBeAbleToGetUnvisitedNeighbours(){
+		Maze maze = spy(new Maze(3,3));
+		MazeDFSGenerator generator = spy(new MazeDFSGenerator(3,3));
+		generator.setMaze(maze);
+		generator.visitCell(1, 0);
+
+		
+		EnumSet<Direction> unvisitedNeighbours = generator.getUnvisitedNeighbours(1, 1);
+		
+		verify(maze).getNeighbours(1, 1);
+		verify(generator, times(2)).wasCellVisited(1,0);
+		verify(generator).wasCellVisited(1, 2);
+		verify(generator).wasCellVisited(0,1);
+		verify(generator).wasCellVisited(2,1);
+		assertNotNull(unvisitedNeighbours);
+		assertEquals(EnumSet.of(Direction.SOUTH,Direction.EAST,Direction.WEST),unvisitedNeighbours);
 	}
 }

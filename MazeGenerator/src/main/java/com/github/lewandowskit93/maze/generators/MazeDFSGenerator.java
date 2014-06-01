@@ -1,11 +1,13 @@
 package com.github.lewandowskit93.maze.generators;
 
+import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
 
 import com.github.lewandowskit93.maze.core.Cell;
 import com.github.lewandowskit93.maze.core.Coordinates2D;
+import com.github.lewandowskit93.maze.core.Direction;
 import com.github.lewandowskit93.maze.core.InvalidMazeHeightException;
 import com.github.lewandowskit93.maze.core.InvalidMazeWidthException;
 import com.github.lewandowskit93.maze.core.Maze;
@@ -88,6 +90,18 @@ public class MazeDFSGenerator implements MazeGenerator {
 
 	public Coordinates2D getRandomCellCoordinates() {
 		return new Coordinates2D(numberGenerator.nextInt(width),numberGenerator.nextInt(height));
+	}
+
+	public EnumSet<Direction> getUnvisitedNeighbours(int x, int y) {
+		EnumSet<Direction> neighbours = maze.getNeighbours(x, y);
+		EnumSet<Direction> unvisitedNeighbours = EnumSet.noneOf(Direction.class);
+		for(Direction neighbour : neighbours){
+			Coordinates2D neighbourCoords = maze.getNeighbourCoordinates(x, y, neighbour);
+			if(!wasCellVisited(neighbourCoords.getX(),neighbourCoords.getY())){
+				unvisitedNeighbours.add(neighbour);
+			}
+		}
+		return unvisitedNeighbours;
 	}
 
 }
