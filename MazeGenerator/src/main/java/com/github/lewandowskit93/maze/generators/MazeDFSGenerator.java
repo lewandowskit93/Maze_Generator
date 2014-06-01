@@ -126,16 +126,18 @@ public class MazeDFSGenerator implements MazeGenerator {
 	public void nextStep() {
 		if(!routeCoordinatesStack.empty()){
 			Coordinates2D coordinates = routeCoordinatesStack.pop();
+			visitCell(coordinates.getX(), coordinates.getY());
 			Direction direction = getRandomUnvisitedNeighbours(coordinates.getX(), coordinates.getY());
 			if(direction!=null){
 				Coordinates2D neighbourCoordinates = maze.getNeighbourCoordinates(coordinates.getX(), coordinates.getY(), direction);
 				routeCoordinatesStack.push(neighbourCoordinates);
+				maze.removeWall(coordinates.getX(), coordinates.getY(), direction);
 			}
 			else{
 				if(!routeCoordinatesStack.empty()){
 					Coordinates2D previousCoordinates = routeCoordinatesStack.pop();
 					routeCoordinatesStack.push(previousCoordinates);
-				}				
+				}
 			}
 		}
 		

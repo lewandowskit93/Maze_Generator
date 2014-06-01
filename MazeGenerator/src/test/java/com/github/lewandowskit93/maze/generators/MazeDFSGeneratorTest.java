@@ -648,7 +648,7 @@ public class MazeDFSGeneratorTest {
 	@Parameters(method ="getValidSizesWithValidCoordinates2")
 	public void shouldAskForRandomNeighbourOfCell(int width, int height, int x, int y){
 		MazeDFSGenerator generator = spy(new MazeDFSGenerator(width, height));
-		Stack<Coordinates2D> stack = spy(new Stack());
+		Stack<Coordinates2D> stack = spy(new Stack<Coordinates2D>());
 		stack.add(new Coordinates2D(x,y));
 		generator.setRouteCoordinatesStack(stack);
 		generator.nextStep();
@@ -660,6 +660,7 @@ public class MazeDFSGeneratorTest {
 	@Parameters(method ="getValidSizesWithValidCoordinates2")
 	public void shouldNotAskForRandomNeighbourOfCell(int width, int height, int x, int y){
 		MazeDFSGenerator generator = spy(new MazeDFSGenerator(width, height));
+		@SuppressWarnings("unchecked")
 		Stack<Coordinates2D> stack = mock(Stack.class);
 		when(stack.empty()).thenReturn(true);
 		generator.setRouteCoordinatesStack(stack);
@@ -677,6 +678,7 @@ public class MazeDFSGeneratorTest {
 		verify(generator).nextStep();
 	}
 	
+	@SuppressWarnings("unused")
 	private static final Object[] getSizesAndCoordinatesWithNeighboursToVisit(){
 		return new Object[]{
 			new Object[]{7,7,3,2,2,2,Direction.WEST},
@@ -695,7 +697,7 @@ public class MazeDFSGeneratorTest {
 		doReturn(direction).when(generator).getRandomUnvisitedNeighbours(x, y);
 		generator.getRouteCoordinatesStack().push(new Coordinates2D(x,y));
 		generator.nextStep();
-		verify(maze).getNeighbourCoordinates(x, y, direction);
+		verify(maze, atLeastOnce()).getNeighbourCoordinates(x, y, direction);
 	}
 	
 	@Test
@@ -738,6 +740,7 @@ public class MazeDFSGeneratorTest {
 		verify(stack,times(1)).push(any(Coordinates2D.class));
 	}
 	
+	@SuppressWarnings("unused")
 	private static final Object[] getSizesAndCoordinatesWithPrevious(){
 		return new Object[]{
 			new Object[]{7,7,3,2,2,2},
@@ -760,5 +763,29 @@ public class MazeDFSGeneratorTest {
 		generator.getRouteCoordinatesStack().push(new Coordinates2D(x,y));
 		generator.nextStep();
 		verify(stack,times(2)).push(new Coordinates2D(px,py));
+	}
+	
+	@Test
+	@Parameters(method = "getSizesAndCoordinatesWithNeighboursToVisit")
+	public void shouldRemoveWall(int width, int height, int x, int y, int nx, int ny, Direction direction){
+		MazeDFSGenerator generator = spy(new MazeDFSGenerator(width,height));
+		Maze maze = spy(new Maze(width,height));
+		generator.setMaze(maze);
+		doReturn(direction).when(generator).getRandomUnvisitedNeighbours(x, y);
+		generator.getRouteCoordinatesStack().push(new Coordinates2D(x,y));
+		generator.nextStep();
+		verify(maze).removeWall(x, y, direction);
+	}
+	
+	@Test
+	@Parameters(method = "getSizesAndCoordinatesWithNeighboursToVisit")
+	public void shouldSetCellAsVisited(int width, int height, int x, int y, int nx, int ny, Direction direction){
+		MazeDFSGenerator generator = spy(new MazeDFSGenerator(width,height));
+		Maze maze = spy(new Maze(width,height));
+		generator.setMaze(maze);
+		doReturn(null).when(generator).getRandomUnvisitedNeighbours(x, y);
+		generator.getRouteCoordinatesStack().push(new Coordinates2D(x,y));
+		generator.nextStep();
+		verify(generator, atLeastOnce()).visitCell(x, y);
 	}
 }
