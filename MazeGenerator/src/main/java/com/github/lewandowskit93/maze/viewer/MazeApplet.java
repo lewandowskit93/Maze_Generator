@@ -3,7 +3,6 @@ package com.github.lewandowskit93.maze.viewer;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.awt.HeadlessException;
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
 
@@ -14,15 +13,19 @@ import com.github.lewandowskit93.maze.core.Maze;
 
 public class MazeApplet extends JApplet implements MazeTilesLoader{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private MazePanel mazePanel;
 	
 	@Override
 	public void init() {
 		super.init();
 		setBackground(Color.BLACK);
-		setSize(640,320);
+		setSize(800,600);
 		mazePanel = new MazePanel(640,320,true);
-		mazePanel.setMaze(new Maze(20,20));
+		mazePanel.setMaze(new Maze(80,80));
 		mazePanel.setMazeTiles(loadTiles());
 		add(mazePanel);
 		setVisible(true);
