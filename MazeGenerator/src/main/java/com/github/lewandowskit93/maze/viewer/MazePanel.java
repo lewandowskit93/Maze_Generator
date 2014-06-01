@@ -54,7 +54,6 @@ public class MazePanel extends JPanel {
 
 	@Override
 	public void paintComponent(Graphics g) {
-		super.paint(g);
 		paintMaze(g);
 	}
 
@@ -63,12 +62,15 @@ public class MazePanel extends JPanel {
 		double tHeight = getHeight();
 		tWidth/=(maze.getWidth());
 		tHeight/=(maze.getHeight());
+		tWidth=Math.ceil(tWidth);
+		tHeight=Math.ceil(tHeight);
 		if(maze!=null){
 			for(int y=0;y<maze.getHeight();++y){
 				for(int x=0;x<maze.getWidth();++x){
 					int tileID = Direction.getIntValueOf(maze.getCell(x,y).getWalls());
 					BufferedImage tile = tiles.get(tileID);
 					if(tile!=null)g.drawImage(tile, (int)(x*tWidth), (int)(y*tHeight), (int)tWidth, (int)tHeight, null);
+					//System.out.println((int)(x*tWidth)+" "+(int)(y*tHeight)+" "+(int)tWidth+" "+(int)tHeight);
 				}
 			}
 		}
