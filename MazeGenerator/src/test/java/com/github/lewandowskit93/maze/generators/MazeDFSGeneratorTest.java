@@ -1,12 +1,16 @@
 package com.github.lewandowskit93.maze.generators;
 
 import static org.junit.Assert.*;
+
+import java.util.Set;
+
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import com.github.lewandowskit93.maze.core.Cell;
 import com.github.lewandowskit93.maze.core.InvalidCellCoordinatesException;
 import com.github.lewandowskit93.maze.core.InvalidMazeSizeException;
 import com.github.lewandowskit93.maze.core.Maze;
@@ -104,6 +108,7 @@ public class MazeDFSGeneratorTest {
 		}
 	}
 	
+	@SuppressWarnings("unused")
 	private static final Object[] getValidSizesWithInvalidCoordinates(){
 		return new Object[]{
 			new Object[]{2,3,0,3},
@@ -195,6 +200,7 @@ public class MazeDFSGeneratorTest {
 		assertSame(maze,generator.getMaze());
 	}
 	
+	@SuppressWarnings("unused")
 	private static final Object[] getMazesWithWrongSizes(){
 		return new Object[]{
 			new Object[]{0,3,new Maze(3,7)},
@@ -231,4 +237,116 @@ public class MazeDFSGeneratorTest {
 			}
 		}
 	}
+	
+	@Test
+	public void shouldReturnNumberOfUnvisitedCells(){
+		MazeDFSGenerator generator = new MazeDFSGenerator(4, 3);
+		assertEquals(12,generator.getNumberOfUnvisitedCells());
+		generator.visitCell(1, 1);
+		assertEquals(11,generator.getNumberOfUnvisitedCells());
+		generator.visitCell(2,0);
+		assertEquals(10,generator.getNumberOfUnvisitedCells());
+		generator.visitCell(0,1);
+		assertEquals(9,generator.getNumberOfUnvisitedCells());
+		generator.visitCell(0,1);
+		assertEquals(9,generator.getNumberOfUnvisitedCells());
+		generator.reset();
+		assertEquals(12,generator.getNumberOfUnvisitedCells());
+	}
+	
+	@SuppressWarnings("unused")
+	private static final Object[] getValidSizesWithValidCoordinates(){
+		return new Object[]{
+			new Object[]{1,1,0,0},
+			new Object[]{1,3,0,1},
+			new Object[]{3,1,2,0},
+			new Object[]{16,16,7,7}
+		};
+	}
+	
+	@Test
+	@Parameters(method = "getValidSizesWithValidCoordinates")
+	public void shouldBeAbleToGetUnvisitedCells(int width, int height, int x1, int y1){
+		MazeDFSGenerator generator = new MazeDFSGenerator(width,height);
+		Set<Cell> unvisitedCells = generator.getUnvisitedCells();
+		for(int x=0;x<width;++x){
+			for(int y=0;y<height;++y){
+				assertTrue(unvisitedCells.contains(generator.getMaze().getCell(x,y)));
+			}
+		}
+		generator.visitCell(x1,y1);
+		unvisitedCells = generator.getUnvisitedCells();
+		for(int x=0;x<width;++x){
+			for(int y=0;y<height;++y){
+				if(x==x1 && y==y1){
+					assertFalse(unvisitedCells.contains(generator.getMaze().getCell(x,y)));
+				}
+				else assertTrue(unvisitedCells.contains(generator.getMaze().getCell(x,y)));
+			}
+		}
+	}
+	
+	@SuppressWarnings("unused")
+	private static final Object[] getValidSizesWith2ValidCoordinates(){
+		return new Object[]{
+			new Object[]{1,3,0,1,0,0},
+			new Object[]{3,1,2,0,1,0},
+			new Object[]{16,16,7,7,15,15}
+		};
+	}
+	
+	@Test
+	@Parameters(method = "getValidSizesWith2ValidCoordinates")
+	public void shouldBeAbleToGetUnvisitedCells2(int width, int height, int x1, int y1, int x2,int y2){
+		MazeDFSGenerator generator = new MazeDFSGenerator(width,height);
+		Set<Cell> unvisitedCells = generator.getUnvisitedCells();
+		for(int x=0;x<width;++x){
+			for(int y=0;y<height;++y){
+				assertTrue(unvisitedCells.contains(generator.getMaze().getCell(x,y)));
+			}
+		}
+		generator.visitCell(x1,y1);
+		generator.visitCell(x2,y2);
+		unvisitedCells = generator.getUnvisitedCells();
+		for(int x=0;x<width;++x){
+			for(int y=0;y<height;++y){
+				if(x==x1 && y==y1){
+					assertFalse(unvisitedCells.contains(generator.getMaze().getCell(x,y)));
+				}
+				else if(x==x2 && y==y2){
+					assertFalse(unvisitedCells.contains(generator.getMaze().getCell(x,y)));
+				}
+				else assertTrue(unvisitedCells.contains(generator.getMaze().getCell(x,y)));
+			}
+		}
+		generator.reset();
+		unvisitedCells = generator.getUnvisitedCells();
+		for(int x=0;x<width;++x){
+			for(int y=0;y<height;++y){
+				assertTrue(unvisitedCells.contains(generator.getMaze().getCell(x,y)));
+			}
+		}
+	}
+	
+	@Test
+	public void afterResettingShouldReturnNewUnvisitedCells(){
+		MazeDFSGenerator generator = new MazeDFSGenerator(4, 7);
+		Set<Cell> unvisitedCells1 = generator.getUnvisitedCells();
+		generator.reset();
+		Set<Cell> unvisitedCells2 = generator.getUnvisitedCells();
+		assertNotSame(unvisitedCells1,unvisitedCells2);
+	}
+	
+	@Test
+	public void shouldReturnTheSameUnvisitedCellsIfNotResetted(){
+		MazeDFSGenerator generator = new MazeDFSGenerator(4, 7);
+		Set<Cell> unvisitedCells1 = generator.getUnvisitedCells();
+		Set<Cell> unvisitedCells2 = generator.getUnvisitedCells();
+		assertSame(unvisitedCells1,unvisitedCells2);
+		generator.visitCell(0, 0);
+		Set<Cell> unvisitedCells3 = generator.getUnvisitedCells();
+		assertSame(unvisitedCells1,unvisitedCells3);
+		
+	}
+	
 }

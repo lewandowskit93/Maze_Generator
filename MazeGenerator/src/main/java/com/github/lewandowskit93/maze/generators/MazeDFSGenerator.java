@@ -1,8 +1,7 @@
 package com.github.lewandowskit93.maze.generators;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Set;
 
 import com.github.lewandowskit93.maze.core.Cell;
 import com.github.lewandowskit93.maze.core.InvalidMazeHeightException;
@@ -63,6 +62,14 @@ public class MazeDFSGenerator implements MazeGenerator {
 				unvisitedCells.add(maze.getCell(x,y));
 			}
 		}
+	}
+
+	public int getNumberOfUnvisitedCells() {
+		return unvisitedCells.size();
+	}
+
+	public Set<Cell> getUnvisitedCells() {
+		return unvisitedCells;
 	}
 
 }
