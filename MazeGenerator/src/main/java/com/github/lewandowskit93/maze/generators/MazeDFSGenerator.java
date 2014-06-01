@@ -38,6 +38,10 @@ public class MazeDFSGenerator implements MazeGenerator {
 		while(getNumberOfUnvisitedCells()>0){
 			nextStep();
 		}
+		Coordinates2D startCoords=makeRandomHoleInBounds();
+		maze.setStartCoordinates(startCoords.getX(), startCoords.getY());
+		Coordinates2D finishCoords=makeRandomHoleInBounds();
+		maze.setFinishCoordinates(finishCoords.getX(), finishCoords.getY());
 		return maze;
 	}
 
@@ -145,6 +149,38 @@ public class MazeDFSGenerator implements MazeGenerator {
 				}
 			}
 		}
+	}
+
+	public Coordinates2D makeRandomHoleInBounds() {
+		int ord = numberGenerator.nextInt(Direction.values().length);
+		Direction toRemove = Direction.values()[ord];
+		Coordinates2D coordinates = null;
+		switch(toRemove){
+			case NORTH:{
+				coordinates = new Coordinates2D(numberGenerator.nextInt(width), 0);
+				
+				break;
+			}
+			case EAST:{
+				coordinates = new Coordinates2D(width-1,numberGenerator.nextInt(height));
+				break;
+			}
+			case SOUTH:{
+				coordinates = new Coordinates2D(numberGenerator.nextInt(width), height-1);
+				break;
+			}
+			case WEST:{
+				coordinates = new Coordinates2D(0,numberGenerator.nextInt(height));
+				break;
+			}
+			default:{
+				
+			}
+		}
+		if(coordinates!=null){
+			maze.removeWall(coordinates.getX(), coordinates.getY(), toRemove);
+		}
+		return coordinates;
 	}
 
 }
