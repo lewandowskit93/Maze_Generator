@@ -123,52 +123,79 @@ public class MazeApplet extends JApplet implements MazeTilesLoader, ComponentLis
 		// TODO Auto-generated method stub
 		
 	}
+	
+	private boolean generatingMaze;
+	
+	public synchronized boolean isGeneratingMaze(){
+		return generatingMaze;
+	}
+	
+	public synchronized void setGeneratingMaze(boolean generatingMaze){
+		this.generatingMaze=generatingMaze;
+	}
+	
+	public synchronized boolean tryStartGeneratingMaze(){
+		if(!generatingMaze){
+			generatingMaze=true;
+			return true;
+		}
+		else return false;
+	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if(menuPanel!=null){
 			if(e.getSource()==menuPanel.getGenerateMazeButton()){
-				Thread generatorThread = new Thread(new Runnable(){
+				if(tryStartGeneratingMaze()){
+					Thread generatorThread = new Thread(new Runnable(){
+						
+						private int width,height;
+						private MazePanel panel;
+						private MazeApplet applet;
+						
+						@Override
+						public void run() {
+							MazeDFSGenerator generator = new MazeDFSGenerator(width, height);
+							Maze maze = generator.generateMaze();
+							SwingUtilities.invokeLater(new Runnable(){
+								
+								private Maze maze;
+								private MazePanel panel;
+								private MazeApplet applet;
+								
+								@Override
+								public void run(){
+									panel.setMaze(maze);
+									panel.repaint();
+									applet.setGeneratingMaze(false);
+								}
+								
+								public Runnable init(Maze maze, MazePanel panel, MazeApplet applet){
+									this.maze=maze;
+									this.panel=panel;
+									this.applet=applet;
+									return this;
+								}
+								
+							}.init(maze,panel,applet));
+						}
+						
+						public Runnable init(int width, int height, MazePanel panel, MazeApplet applet){
+							this.width=width;
+							this.height=height;
+							this.panel=panel;
+							this.applet=applet;
+							return this;
+						}
+						
+						
+					}.init(menuPanel.getMazeWidth(),menuPanel.getMazeHeight(),mazeViewerPanel.getMazePanel(),this));
 					
-					private int width,height;
-					private MazePanel panel;
+					generatorThread.start();
 					
-					@Override
-					public void run() {
-						MazeDFSGenerator generator = new MazeDFSGenerator(width, height);
-						Maze maze = generator.generateMaze();
-						SwingUtilities.invokeLater(new Runnable(){
-							
-							Maze maze;
-							MazePanel panel;
-							@Override
-							public void run(){
-								panel.setMaze(maze);
-								panel.repaint();
-							}
-							
-							public Runnable init(Maze maze, MazePanel panel){
-								this.maze=maze;
-								this.panel=panel;
-								return this;
-							}
-							
-						}.init(maze,panel));
-					}
-					
-					public Runnable init(int width, int height, MazePanel panel){
-						this.width=width;
-						this.height=height;
-						this.panel=panel;
-						return this;
-					}
-					
-					
-				}.init(menuPanel.getMazeWidth(),menuPanel.getMazeHeight(),mazeViewerPanel.getMazePanel()));
-				
-				generatorThread.start();
-				
+				}
 			}
+				
 		}
 	}
 
