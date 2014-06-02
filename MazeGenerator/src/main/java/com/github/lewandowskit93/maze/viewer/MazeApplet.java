@@ -17,18 +17,19 @@ public class MazeApplet extends JApplet implements MazeTilesLoader{
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private MazePanel mazePanel;
+	private MazeViewerPanel mazeViewerPanel;
 	
 	@Override
 	public void init() {
 		super.init();
 		setBackground(Color.BLACK);
-		setSize(600,600);
+		//setSize(800,600);
 		MazeDFSGenerator generator = new MazeDFSGenerator(15, 15);
-		mazePanel = new MazePanel(320,320,true);
-		mazePanel.setMaze(generator.generateMaze());
-		mazePanel.setMazeTiles(loadTiles());
-		add(mazePanel);
+		
+		mazeViewerPanel = new MazeViewerPanel(getWidth(),getHeight());
+		mazeViewerPanel.getMazePanel().setMaze(generator.generateMaze());
+		mazeViewerPanel.getMazePanel().setMazeTiles(loadTiles());
+		add(mazeViewerPanel);
 		setVisible(true);
 	}
 
@@ -41,12 +42,14 @@ public class MazeApplet extends JApplet implements MazeTilesLoader{
 			BufferedImage tile = new BufferedImage(32, 32, BufferedImage.TYPE_INT_ARGB);
 			Graphics2D g2d = (Graphics2D)tile.getGraphics();
 			g2d.setBackground(Color.BLACK);
+			g2d.clearRect(0,0,32,32);
 			g2d.setColor(Color.WHITE);
-			g2d.setStroke(new BasicStroke(3));
+			BasicStroke stroke = new BasicStroke(3);
+			g2d.setStroke(stroke);
 			if(Direction.getFromIntValue(i).contains(Direction.NORTH))g2d.drawRect(0, 1, 32, 0);
-			if(Direction.getFromIntValue(i).contains(Direction.SOUTH))g2d.drawRect(0, 31, 32, 0);
+			if(Direction.getFromIntValue(i).contains(Direction.SOUTH))g2d.drawRect(0, 30, 32, 0);
 			if(Direction.getFromIntValue(i).contains(Direction.WEST))g2d.drawRect(1, 0, 0, 32);
-			if(Direction.getFromIntValue(i).contains(Direction.EAST))g2d.drawRect(31, 0, 0, 32);
+			if(Direction.getFromIntValue(i).contains(Direction.EAST))g2d.drawRect(30, 0, 0, 32);
 			tiles.put(i, tile);
 		}
 		return tiles;
