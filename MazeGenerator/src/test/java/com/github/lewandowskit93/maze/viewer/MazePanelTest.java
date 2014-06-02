@@ -157,4 +157,40 @@ public class MazePanelTest {
 		}
 		
 	}
+	
+	@Test
+	public void shouldPaintAllTilesCellsWallsShouldBeChecked2(){
+		Graphics2D g = mock(Graphics2D.class);
+		MazePanel panel = new MazePanel(47,95);
+		HashMap<Integer,BufferedImage> tiles = new HashMap<Integer,BufferedImage>();
+		
+		for(int i=0;i<16;++i){
+			BufferedImage tile = new BufferedImage(8, 8, BufferedImage.TYPE_INT_ARGB);
+			tiles.put(i, tile);
+		}
+		panel.setMazeTiles(tiles);
+		Cell[][] cells = new Cell[][]{
+				new Cell[]{mock(Cell.class),mock(Cell.class),mock(Cell.class),mock(Cell.class)},
+				new Cell[]{mock(Cell.class),mock(Cell.class),mock(Cell.class),mock(Cell.class)},
+				new Cell[]{mock(Cell.class),mock(Cell.class),mock(Cell.class),mock(Cell.class)},
+				new Cell[]{mock(Cell.class),mock(Cell.class),mock(Cell.class),mock(Cell.class)}
+		};
+		Maze maze = new Maze(4,4,cells);
+		for(int y=0;y<4;++y){
+			for(int x=0;x<4;++x){
+				when(cells[y][x].getWalls()).thenReturn(Direction.getFromIntValue(y*4+x));
+				//when(maze.getCell(x,y)).thenReturn(cells[y][x]);
+			}
+		}
+		panel.setMaze(maze);
+		panel.paintMaze(g);
+		for(int y=0;y<4;++y){
+			for(int x=0;x<4;++x){
+				BufferedImage tile = tiles.get(y*4+x);
+				verify(g).drawImage(tile,x*11,y*23,11,23,null);
+				verify(cells[y][x]).getWalls();
+			}
+		}
+		
+	}
 }
