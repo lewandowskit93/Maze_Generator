@@ -860,7 +860,8 @@ public class MazeDFSGeneratorTest {
 		Stack<Coordinates2D> stack = spy(new Stack<Coordinates2D>());
 		generator.setRouteCoordinatesStack(stack);
 		when(generator.getNumberOfUnvisitedCells()).thenReturn(0);
-		when(generator.getRandomCellCoordinates()).thenReturn(new Coordinates2D(x,y)).thenReturn(new Coordinates2D(x,y)).thenReturn(new Coordinates2D(x2,y2));
+		when(generator.getRandomCellCoordinates()).thenReturn(new Coordinates2D(x,y));
+		when(generator.makeRandomHoleInBounds()).thenReturn(new Hole(new Coordinates2D(x,y),Direction.NORTH)).thenReturn(new Hole( new Coordinates2D(x2,y2),Direction.SOUTH));
 		generator.generateMaze();
 		verify(generator,times(2)).makeRandomHoleInBounds();
 	}
