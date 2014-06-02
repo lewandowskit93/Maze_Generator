@@ -10,6 +10,10 @@ import junitparams.Parameters;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import com.github.lewandowskit93.maze.exceptions.InvalidCellCoordinatesException;
+import com.github.lewandowskit93.maze.exceptions.MazeException;
+import com.github.lewandowskit93.maze.exceptions.NoNeighbourException;
+
 import static org.mockito.Mockito.*;
 
 @RunWith(JUnitParamsRunner.class)

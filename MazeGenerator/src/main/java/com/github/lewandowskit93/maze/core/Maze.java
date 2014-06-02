@@ -2,6 +2,13 @@ package com.github.lewandowskit93.maze.core;
 
 import java.util.EnumSet;
 
+import com.github.lewandowskit93.maze.exceptions.InvalidCellCoordinatesException;
+import com.github.lewandowskit93.maze.exceptions.InvalidCellsArrayHeightException;
+import com.github.lewandowskit93.maze.exceptions.InvalidCellsArrayWidthException;
+import com.github.lewandowskit93.maze.exceptions.InvalidMazeHeightException;
+import com.github.lewandowskit93.maze.exceptions.InvalidMazeWidthException;
+import com.github.lewandowskit93.maze.exceptions.NoNeighbourException;
+
 public class Maze {
 
 	private int width,height;

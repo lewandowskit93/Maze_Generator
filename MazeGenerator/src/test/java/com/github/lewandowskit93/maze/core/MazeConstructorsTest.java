@@ -7,6 +7,14 @@ import junitparams.Parameters;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import com.github.lewandowskit93.maze.exceptions.InvalidCellsArrayHeightException;
+import com.github.lewandowskit93.maze.exceptions.InvalidCellsArraySizeException;
+import com.github.lewandowskit93.maze.exceptions.InvalidCellsArrayWidthException;
+import com.github.lewandowskit93.maze.exceptions.InvalidMazeHeightException;
+import com.github.lewandowskit93.maze.exceptions.InvalidMazeSizeException;
+import com.github.lewandowskit93.maze.exceptions.InvalidMazeWidthException;
+import com.github.lewandowskit93.maze.exceptions.MazeException;
+
 @RunWith(JUnitParamsRunner.class)
 public class MazeConstructorsTest {
 	

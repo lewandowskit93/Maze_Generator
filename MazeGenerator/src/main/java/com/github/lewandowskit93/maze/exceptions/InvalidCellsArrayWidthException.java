@@ -1,4 +1,4 @@
-package com.github.lewandowskit93.maze.core;
+package com.github.lewandowskit93.maze.exceptions;
 
 public class InvalidCellsArrayWidthException extends InvalidCellsArraySizeException {
 

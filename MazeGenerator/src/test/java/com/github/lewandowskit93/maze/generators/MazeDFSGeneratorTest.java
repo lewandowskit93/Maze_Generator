@@ -20,13 +20,14 @@ import org.junit.runner.RunWith;
 
 
 
+
 import com.github.lewandowskit93.maze.core.Cell;
 import com.github.lewandowskit93.maze.core.Coordinates2D;
 import com.github.lewandowskit93.maze.core.Direction;
 import com.github.lewandowskit93.maze.core.Hole;
-import com.github.lewandowskit93.maze.core.InvalidCellCoordinatesException;
-import com.github.lewandowskit93.maze.core.InvalidMazeSizeException;
 import com.github.lewandowskit93.maze.core.Maze;
+import com.github.lewandowskit93.maze.exceptions.InvalidCellCoordinatesException;
+import com.github.lewandowskit93.maze.exceptions.InvalidMazeSizeException;
 
 @RunWith(JUnitParamsRunner.class)
 public class MazeDFSGeneratorTest {

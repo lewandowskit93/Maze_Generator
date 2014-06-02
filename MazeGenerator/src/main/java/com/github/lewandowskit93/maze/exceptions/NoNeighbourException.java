@@ -1,4 +1,6 @@
-package com.github.lewandowskit93.maze.core;
+package com.github.lewandowskit93.maze.exceptions;
+
+import com.github.lewandowskit93.maze.core.Direction;
 
 public class NoNeighbourException extends MazeException {
 

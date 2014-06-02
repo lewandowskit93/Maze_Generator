@@ -10,10 +10,10 @@ import com.github.lewandowskit93.maze.core.Cell;
 import com.github.lewandowskit93.maze.core.Coordinates2D;
 import com.github.lewandowskit93.maze.core.Direction;
 import com.github.lewandowskit93.maze.core.Hole;
-import com.github.lewandowskit93.maze.core.InvalidMazeHeightException;
-import com.github.lewandowskit93.maze.core.InvalidMazeWidthException;
 import com.github.lewandowskit93.maze.core.Maze;
 import com.github.lewandowskit93.maze.core.MazeGenerator;
+import com.github.lewandowskit93.maze.exceptions.InvalidMazeHeightException;
+import com.github.lewandowskit93.maze.exceptions.InvalidMazeWidthException;
 
 public class MazeDFSGenerator implements MazeGenerator {
 	
