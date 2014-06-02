@@ -34,7 +34,6 @@ public class MazeApplet extends JApplet implements MazeTilesLoader, ComponentLis
 		super.init();
 		setBackground(Color.BLACK);
 		//setSize(800,600);
-		MazeDFSGenerator generator = new MazeDFSGenerator(15, 15);
 		addComponentListener(this);
 		mazeViewerPanel = new MazeViewerPanel((int)Math.floor(getWidth()*0.8),(int)Math.floor(getHeight()));
 		mazeViewerPanel.getMazePanel().setMaze(null);
@@ -117,7 +116,7 @@ public class MazeApplet extends JApplet implements MazeTilesLoader, ComponentLis
 	public void actionPerformed(ActionEvent e) {
 		if(menuPanel!=null){
 			if(e.getSource()==menuPanel.getGenerateMazeButton()){
-				MazeDFSGenerator generator = new MazeDFSGenerator(15, 15);
+				MazeDFSGenerator generator = new MazeDFSGenerator(menuPanel.getMazeWidth(), menuPanel.getMazeHeight());
 				mazeViewerPanel.getMazePanel().setMaze(generator.generateMaze());
 				mazeViewerPanel.repaint();
 			}
