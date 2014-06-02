@@ -4,6 +4,8 @@ import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.image.BufferedImage;
@@ -17,7 +19,7 @@ import javax.swing.JPanel;
 import com.github.lewandowskit93.maze.core.Direction;
 import com.github.lewandowskit93.maze.generators.MazeDFSGenerator;
 
-public class MazeApplet extends JApplet implements MazeTilesLoader, ComponentListener{
+public class MazeApplet extends JApplet implements MazeTilesLoader, ComponentListener, ActionListener{
 
 	/**
 	 * 
@@ -35,7 +37,7 @@ public class MazeApplet extends JApplet implements MazeTilesLoader, ComponentLis
 		MazeDFSGenerator generator = new MazeDFSGenerator(15, 15);
 		addComponentListener(this);
 		mazeViewerPanel = new MazeViewerPanel((int)Math.floor(getWidth()*0.8),(int)Math.floor(getHeight()));
-		mazeViewerPanel.getMazePanel().setMaze(generator.generateMaze());
+		mazeViewerPanel.getMazePanel().setMaze(null);
 		mazeViewerPanel.getMazePanel().setMazeTiles(loadTiles());
 		
 		menuPanel = new MenuPanel((int)Math.floor(getWidth()*0.2),(int)Math.floor(getHeight()));
@@ -50,6 +52,7 @@ public class MazeApplet extends JApplet implements MazeTilesLoader, ComponentLis
 		menuPanel.setPreferredSize(new Dimension((int)Math.min(Math.floor(getWidth()*0.2),200),(int)Math.floor(getHeight())));
 		menuPanel.setMaximumSize(new Dimension(200,getHeight()));
 		menuPanel.setBorder(BorderFactory.createRaisedBevelBorder());
+		menuPanel.getGenerateMazeButton().addActionListener(this);
 		setVisible(true);
 	}
 
@@ -108,6 +111,17 @@ public class MazeApplet extends JApplet implements MazeTilesLoader, ComponentLis
 	public void componentShown(ComponentEvent arg0) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		if(menuPanel!=null){
+			if(e.getSource()==menuPanel.getGenerateMazeButton()){
+				MazeDFSGenerator generator = new MazeDFSGenerator(15, 15);
+				mazeViewerPanel.getMazePanel().setMaze(generator.generateMaze());
+				mazeViewerPanel.repaint();
+			}
+		}
 	}
 
 }

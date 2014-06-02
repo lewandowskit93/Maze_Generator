@@ -193,4 +193,13 @@ public class MazePanelTest {
 		}
 		
 	}
+	
+	@Test
+	public void shouldBeAbleToPaintMazeButShouldNotBePaintedBecauseItIsNull(){
+		Graphics2D g = mock(Graphics2D.class);
+		MazePanel panel = new MazePanel(47,95);
+		panel.setMaze(null);
+		panel.paintMaze(g);
+		verifyNoMoreInteractions(g);
+	}
 }

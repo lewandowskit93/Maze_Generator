@@ -62,13 +62,13 @@ public class MazePanel extends JPanel {
 
 	
 	public synchronized void paintMaze(Graphics g) {
-		double tWidth = getWidth();
-		double tHeight = getHeight();
-		tWidth/=(maze.getWidth());
-		tHeight/=(maze.getHeight());
-		tWidth=Math.floor(tWidth);
-		tHeight=Math.floor(tHeight);
 		if(maze!=null){
+			double tWidth = getWidth();
+			double tHeight = getHeight();
+			tWidth/=(maze.getWidth());
+			tHeight/=(maze.getHeight());
+			tWidth=Math.floor(tWidth);
+			tHeight=Math.floor(tHeight);
 			for(int y=0;y<maze.getHeight();++y){
 				for(int x=0;x<maze.getWidth();++x){
 					int tileID = Direction.getIntValueOf(maze.getCell(x,y).getWalls());
