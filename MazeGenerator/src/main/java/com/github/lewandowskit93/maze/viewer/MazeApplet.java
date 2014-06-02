@@ -15,8 +15,10 @@ import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JApplet;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 
 import com.github.lewandowskit93.maze.core.Direction;
+import com.github.lewandowskit93.maze.core.Maze;
 import com.github.lewandowskit93.maze.generators.MazeDFSGenerator;
 
 public class MazeApplet extends JApplet implements MazeTilesLoader, ComponentListener, ActionListener{
@@ -32,8 +34,18 @@ public class MazeApplet extends JApplet implements MazeTilesLoader, ComponentLis
 	@Override
 	public void init() {
 		super.init();
-		setBackground(Color.BLACK);
+		//setBackground(Color.BLACK);
 		//setSize(800,600);
+		SwingUtilities.invokeLater(new Runnable(){
+			@Override
+			public void run(){
+				initGUI();
+			}
+		});
+		
+	}
+	
+	private void initGUI(){
 		addComponentListener(this);
 		mazeViewerPanel = new MazeViewerPanel((int)Math.floor(getWidth()*0.8),(int)Math.floor(getHeight()));
 		mazeViewerPanel.getMazePanel().setMaze(null);
@@ -116,9 +128,46 @@ public class MazeApplet extends JApplet implements MazeTilesLoader, ComponentLis
 	public void actionPerformed(ActionEvent e) {
 		if(menuPanel!=null){
 			if(e.getSource()==menuPanel.getGenerateMazeButton()){
-				MazeDFSGenerator generator = new MazeDFSGenerator(menuPanel.getMazeWidth(), menuPanel.getMazeHeight());
-				mazeViewerPanel.getMazePanel().setMaze(generator.generateMaze());
-				mazeViewerPanel.repaint();
+				Thread generatorThread = new Thread(new Runnable(){
+					
+					private int width,height;
+					private MazePanel panel;
+					
+					@Override
+					public void run() {
+						MazeDFSGenerator generator = new MazeDFSGenerator(width, height);
+						Maze maze = generator.generateMaze();
+						SwingUtilities.invokeLater(new Runnable(){
+							
+							Maze maze;
+							MazePanel panel;
+							@Override
+							public void run(){
+								panel.setMaze(maze);
+								panel.repaint();
+							}
+							
+							public Runnable init(Maze maze, MazePanel panel){
+								this.maze=maze;
+								this.panel=panel;
+								return this;
+							}
+							
+						}.init(maze,panel));
+					}
+					
+					public Runnable init(int width, int height, MazePanel panel){
+						this.width=width;
+						this.height=height;
+						this.panel=panel;
+						return this;
+					}
+					
+					
+				}.init(menuPanel.getMazeWidth(),menuPanel.getMazeHeight(),mazeViewerPanel.getMazePanel()));
+				
+				generatorThread.start();
+				
 			}
 		}
 	}

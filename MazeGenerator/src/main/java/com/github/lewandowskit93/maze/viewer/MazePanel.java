@@ -1,11 +1,15 @@
 package com.github.lewandowskit93.maze.viewer;
 
 
+import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
 
 import javax.swing.JPanel;
+
+
 
 
 
@@ -57,9 +61,17 @@ public class MazePanel extends JPanel {
 
 	@Override
 	public void paintComponent(Graphics g) {
+		clearBackground(g);
 		paintMaze(g);
 	}
 
+	public void clearBackground(Graphics g){
+		Graphics2D g2d = (Graphics2D) g;
+		Color color = g2d.getBackground();
+		g2d.setBackground(Color.BLACK);
+		g2d.clearRect(0, 0, getWidth(),getHeight());
+		setBackground(color);
+	}
 	
 	public synchronized void paintMaze(Graphics g) {
 		if(maze!=null){
