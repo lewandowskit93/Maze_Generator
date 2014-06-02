@@ -18,9 +18,12 @@ import org.junit.runner.RunWith;
 
 
 
+
+
 import com.github.lewandowskit93.maze.core.Cell;
 import com.github.lewandowskit93.maze.core.Coordinates2D;
 import com.github.lewandowskit93.maze.core.Direction;
+import com.github.lewandowskit93.maze.core.Hole;
 import com.github.lewandowskit93.maze.core.InvalidCellCoordinatesException;
 import com.github.lewandowskit93.maze.core.InvalidMazeSizeException;
 import com.github.lewandowskit93.maze.core.Maze;
@@ -851,13 +854,13 @@ public class MazeDFSGeneratorTest {
 	}
 	
 	@Test
-	@Parameters(method = "getValidSizesWithValidCoordinates3")
-	public void shouldAskToMakeHoleExactlyTwoTimes(int width, int height, int x, int y){
+	@Parameters(method = "getSizesWithTwoCellsCoordinates")
+	public void shouldAskToMakeHoleExactlyTwoTimes(int width, int height, int x, int y, int x2, int y2){
 		MazeDFSGenerator generator = spy(new MazeDFSGenerator(width, height));
 		Stack<Coordinates2D> stack = spy(new Stack<Coordinates2D>());
 		generator.setRouteCoordinatesStack(stack);
 		when(generator.getNumberOfUnvisitedCells()).thenReturn(0);
-		when(generator.getRandomCellCoordinates()).thenReturn(new Coordinates2D(x,y));
+		when(generator.getRandomCellCoordinates()).thenReturn(new Coordinates2D(x,y)).thenReturn(new Coordinates2D(x,y)).thenReturn(new Coordinates2D(x2,y2));
 		generator.generateMaze();
 		verify(generator,times(2)).makeRandomHoleInBounds();
 	}
@@ -887,9 +890,10 @@ public class MazeDFSGeneratorTest {
 		when(rng.nextInt(width)).thenReturn(rnd2);
 		generator.setRandomNumberGenerator(rng);
 		generator.setMaze(maze);
-		Coordinates2D returned = generator.makeRandomHoleInBounds();
+		Hole returned = generator.makeRandomHoleInBounds();
 		verify(maze).removeWall(x,y,direction);
-		assertEquals(new Coordinates2D(x,y),returned);
+		assertEquals(new Coordinates2D(x,y),returned.getCoordinates());
+		assertEquals(direction,returned.getRemovedWall());
 	}
 	
 	@Test
@@ -898,11 +902,26 @@ public class MazeDFSGeneratorTest {
 		MazeDFSGenerator generator = spy(new MazeDFSGenerator(width, height));
 		Maze maze = spy(new Maze(width,height));
 		when(generator.getNumberOfUnvisitedCells()).thenReturn(0);
-		when(generator.makeRandomHoleInBounds()).thenReturn(new Coordinates2D(sx,sy)).thenReturn(new Coordinates2D(fx,fy));
+		when(generator.makeRandomHoleInBounds()).thenReturn(new Hole(new Coordinates2D(sx,sy),Direction.NORTH)).thenReturn(new Hole(new Coordinates2D(fx,fy), Direction.SOUTH));
 		
 		generator.setMaze(maze);
 		generator.generateMaze();
 		verify(maze).setStartCoordinates(sx, sy);
 		verify(maze).setFinishCoordinates(fx, fy);
 	}
+	
+	@Test
+	@Parameters(method = "getSizesWithTwoCellsCoordinates")
+	public void shouldSetStartAndFinishCoordinates2(int width, int height, int sx, int sy, int fx, int fy){
+		MazeDFSGenerator generator = spy(new MazeDFSGenerator(width, height));
+		Maze maze = spy(new Maze(width,height));
+		when(generator.getNumberOfUnvisitedCells()).thenReturn(0);
+		when(generator.makeRandomHoleInBounds()).thenReturn(new Hole(new Coordinates2D(sx,sy),Direction.NORTH)).thenReturn(new Hole(new Coordinates2D(sx,sy),Direction.NORTH)).thenReturn(new Hole(new Coordinates2D(sx,sy),Direction.NORTH)).thenReturn(new Hole(new Coordinates2D(fx,fy), Direction.SOUTH));
+		
+		generator.setMaze(maze);
+		generator.generateMaze();
+		verify(maze).setStartCoordinates(sx, sy);
+		verify(maze).setFinishCoordinates(fx, fy);
+	}
+	
 }

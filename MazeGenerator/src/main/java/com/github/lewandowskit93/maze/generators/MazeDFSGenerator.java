@@ -9,6 +9,7 @@ import java.util.Stack;
 import com.github.lewandowskit93.maze.core.Cell;
 import com.github.lewandowskit93.maze.core.Coordinates2D;
 import com.github.lewandowskit93.maze.core.Direction;
+import com.github.lewandowskit93.maze.core.Hole;
 import com.github.lewandowskit93.maze.core.InvalidMazeHeightException;
 import com.github.lewandowskit93.maze.core.InvalidMazeWidthException;
 import com.github.lewandowskit93.maze.core.Maze;
@@ -38,9 +39,14 @@ public class MazeDFSGenerator implements MazeGenerator {
 		while(getNumberOfUnvisitedCells()>0){
 			nextStep();
 		}
-		Coordinates2D startCoords=makeRandomHoleInBounds();
+		Hole startHole = makeRandomHoleInBounds();
+		Coordinates2D startCoords = startHole.getCoordinates();
 		maze.setStartCoordinates(startCoords.getX(), startCoords.getY());
-		Coordinates2D finishCoords=makeRandomHoleInBounds();
+		Hole finishHole = null;
+		do{
+			finishHole = makeRandomHoleInBounds();
+		}while(startHole.equals(finishHole));
+		Coordinates2D finishCoords=finishHole.getCoordinates();
 		maze.setFinishCoordinates(finishCoords.getX(), finishCoords.getY());
 		return maze;
 	}
@@ -151,7 +157,7 @@ public class MazeDFSGenerator implements MazeGenerator {
 		}
 	}
 
-	public Coordinates2D makeRandomHoleInBounds() {
+	public Hole makeRandomHoleInBounds() {
 		int ord = numberGenerator.nextInt(Direction.values().length);
 		Direction toRemove = Direction.values()[ord];
 		Coordinates2D coordinates = null;
@@ -180,7 +186,7 @@ public class MazeDFSGenerator implements MazeGenerator {
 		if(coordinates!=null){
 			maze.removeWall(coordinates.getX(), coordinates.getY(), toRemove);
 		}
-		return coordinates;
+		return new Hole(coordinates,toRemove);
 	}
 
 }
