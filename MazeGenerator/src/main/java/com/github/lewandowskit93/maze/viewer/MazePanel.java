@@ -62,7 +62,21 @@ public class MazePanel extends JPanel {
 	@Override
 	public void paintComponent(Graphics g) {
 		clearBackground(g);
-		paintMaze(g);
+		paintMazeByImage(g);
+	}
+	
+	public synchronized void paintMazeByImage(Graphics g){
+		if(maze!=null){
+			double tWidth = getWidth();
+			double tHeight = getHeight();
+			tWidth/=(maze.getWidth());
+			tHeight/=(maze.getHeight());
+			tWidth=Math.floor(tWidth);
+			tHeight=Math.floor(tHeight);
+			BufferedImage mazeImg = new BufferedImage((int)Math.floor(tWidth*maze.getWidth()), (int)Math.floor(tHeight*maze.getHeight()), BufferedImage.TYPE_INT_ARGB);
+			paintMaze(mazeImg.getGraphics());
+			g.drawImage(mazeImg,0, 0, getWidth(), getHeight(), null);
+		}
 	}
 
 	public void clearBackground(Graphics g){
