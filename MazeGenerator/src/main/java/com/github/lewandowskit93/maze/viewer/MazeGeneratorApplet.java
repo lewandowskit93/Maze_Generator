@@ -5,7 +5,7 @@ import javax.swing.JApplet;
 import javax.swing.SwingUtilities;
 
 
-public class MazeApplet extends JApplet{
+public class MazeGeneratorApplet extends JApplet{
 
 	/**
 	 * 
