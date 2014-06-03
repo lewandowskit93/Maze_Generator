@@ -13,7 +13,6 @@ import java.util.HashMap;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
-import javax.swing.JApplet;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
@@ -21,7 +20,7 @@ import com.github.lewandowskit93.maze.core.Direction;
 import com.github.lewandowskit93.maze.core.Maze;
 import com.github.lewandowskit93.maze.generators.MazeDFSGenerator;
 
-public class MazeApplet extends JApplet implements MazeTilesLoader, ComponentListener, ActionListener{
+public class MazeGeneratorPanel extends JPanel implements MazeTilesLoader, ComponentListener, ActionListener{
 
 	/**
 	 * 
@@ -31,22 +30,21 @@ public class MazeApplet extends JApplet implements MazeTilesLoader, ComponentLis
 	private MenuPanel menuPanel;
 	private JPanel panel;
 	
-	@Override
-	public void init() {
-		super.init();
-		//setBackground(Color.BLACK);
-		//setSize(800,600);
-		SwingUtilities.invokeLater(new Runnable(){
-			@Override
-			public void run(){
-				initGUI();
-			}
-		});
-		
-	}
 	
+	
+	public MazeGeneratorPanel() {
+		super();
+		initGUI();
+	}
+
+	public MazeGeneratorPanel(boolean isDoubleBuffered) {
+		super(isDoubleBuffered);
+		initGUI();
+	}
+
 	private void initGUI(){
 		addComponentListener(this);
+		//setLayout(null);
 		mazeViewerPanel = new MazeViewerPanel((int)Math.floor(getWidth()*0.8),(int)Math.floor(getHeight()));
 		mazeViewerPanel.getMazePanel().setMaze(null);
 		mazeViewerPanel.getMazePanel().setMazeTiles(loadTiles());
@@ -58,13 +56,14 @@ public class MazeApplet extends JApplet implements MazeTilesLoader, ComponentLis
 		panel.add(mazeViewerPanel);
 		panel.add(menuPanel);
 		mazeViewerPanel.setMinimumSize(new Dimension((int)Math.floor(getWidth()*0.8),(int)Math.floor(getHeight())));
+		mazeViewerPanel.setPreferredSize(new Dimension((int)Math.floor(getWidth()*0.8),(int)Math.floor(getHeight())));
+		mazeViewerPanel.setMaximumSize(new Dimension((int)Math.floor(getWidth()*0.8),(int)Math.floor(getHeight())));
 		mazeViewerPanel.setBorder(BorderFactory.createRaisedBevelBorder());
 		menuPanel.setMinimumSize(new Dimension(10,getHeight()));
 		menuPanel.setPreferredSize(new Dimension((int)Math.min(Math.floor(getWidth()*0.2),200),(int)Math.floor(getHeight())));
 		menuPanel.setMaximumSize(new Dimension(200,getHeight()));
 		menuPanel.setBorder(BorderFactory.createRaisedBevelBorder());
 		menuPanel.getGenerateMazeButton().addActionListener(this);
-		setVisible(true);
 	}
 
 	@Override
@@ -104,16 +103,24 @@ public class MazeApplet extends JApplet implements MazeTilesLoader, ComponentLis
 	@Override
 	public void componentResized(ComponentEvent arg0) {
 		if(arg0.getComponent()==this){
+			if(panel!=null){
+				panel.setLocation(0, 0);
+				panel.setSize(getWidth(),getHeight());
+			}
 			if(mazeViewerPanel!=null){
 				mazeViewerPanel.setMinimumSize(new Dimension((int)Math.floor(getWidth()*0.8),(int)Math.floor(getHeight())));
-				//mazeViewerPanel.setPreferredSize(new Dimension((int)Math.floor(getWidth()*0.8),(int)Math.floor(getHeight())));
-				//mazeViewerPanel.setMaximumSize(new Dimension((int)Math.floor(getWidth()*0.9),(int)Math.floor(getHeight())));
+				mazeViewerPanel.setPreferredSize(new Dimension((int)Math.floor(getWidth()*0.8),(int)Math.floor(getHeight())));
+				mazeViewerPanel.setMaximumSize(new Dimension((int)Math.floor(getWidth()*0.9),(int)Math.floor(getHeight())));
+				//mazeViewerPanel.setLocation(0, 0);
 			}
 			if(menuPanel!=null){
 				menuPanel.setMinimumSize(new Dimension(10,getHeight()));
 				menuPanel.setPreferredSize(new Dimension((int)Math.min(Math.floor(getWidth()*0.2),200),getHeight()));
 				menuPanel.setMaximumSize(new Dimension(200,getHeight()));
+				//menuPanel.setLocation(menuPanel.getLocation().x,menuPanel.getLocation().y);
 			}
+			//validate();
+			//repaint();
 		}
 		
 	}
@@ -151,7 +158,7 @@ public class MazeApplet extends JApplet implements MazeTilesLoader, ComponentLis
 						
 						private int width,height;
 						private MazePanel panel;
-						private MazeApplet applet;
+						private MazeGeneratorPanel generatorPanel;
 						
 						@Override
 						public void run() {
@@ -161,30 +168,30 @@ public class MazeApplet extends JApplet implements MazeTilesLoader, ComponentLis
 								
 								private Maze maze;
 								private MazePanel panel;
-								private MazeApplet applet;
+								private MazeGeneratorPanel generatorPanel;
 								
 								@Override
 								public void run(){
 									panel.setMaze(maze);
 									panel.repaint();
-									applet.setGeneratingMaze(false);
+									generatorPanel.setGeneratingMaze(false);
 								}
 								
-								public Runnable init(Maze maze, MazePanel panel, MazeApplet applet){
+								public Runnable init(Maze maze, MazePanel panel, MazeGeneratorPanel generatorPanel){
 									this.maze=maze;
 									this.panel=panel;
-									this.applet=applet;
+									this.generatorPanel=generatorPanel;
 									return this;
 								}
 								
-							}.init(maze,panel,applet));
+							}.init(maze,panel,generatorPanel));
 						}
 						
-						public Runnable init(int width, int height, MazePanel panel, MazeApplet applet){
+						public Runnable init(int width, int height, MazePanel panel, MazeGeneratorPanel generatorPanel){
 							this.width=width;
 							this.height=height;
 							this.panel=panel;
-							this.applet=applet;
+							this.generatorPanel=generatorPanel;
 							return this;
 						}
 						
