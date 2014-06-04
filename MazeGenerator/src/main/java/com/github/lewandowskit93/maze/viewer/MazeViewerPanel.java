@@ -40,8 +40,8 @@ public class MazeViewerPanel extends JPanel implements ComponentListener{
 		panel.setLocation((int)Math.floor((getWidth()*0.05)/2),(int)Math.floor((getHeight()*0.05)/2));
 		panel.setBackground(Color.BLACK);
 		mazePanel = new MazePanel((int)(panel.getWidth()*0.95), (int)(panel.getHeight()*0.95), true);
-		panel.add(mazePanel);
 		mazePanel.setLocation((int)Math.floor((panel.getWidth()*0.05)/2),(int)Math.floor((panel.getHeight()*0.05)/2));
+		panel.add(mazePanel);
 		add(panel);
 	}
 

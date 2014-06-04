@@ -29,18 +29,24 @@ public class MazePanel extends JPanel {
 
 	public MazePanel() {
 		super(true);
+		maze=null;
+		tiles=null;
 		setLayout(null);
 		setSize(800,600);
 	}
 
 	public MazePanel(boolean doubleBuffered) {
 		super(doubleBuffered);
+		maze=null;
+		tiles=null;
 		setLayout(null);
 		setSize(800,600);
 	}
 
 	public MazePanel(int width, int height) {
 		super(true);
+		maze=null;
+		tiles=null;
 		setLayout(null);
 		setSize(width,height);
 	}
@@ -62,10 +68,13 @@ public class MazePanel extends JPanel {
 	@Override
 	public void paintComponent(Graphics g) {
 		clearBackground(g);
-		paintMazeByImage(g);
+		BufferedImage mazeImg=createMazeImage();
+		if(mazeImg!=null){
+			g.drawImage(mazeImg,0, 0, getWidth(), getHeight(), null);
+		}
 	}
 	
-	public synchronized void paintMazeByImage(Graphics g){
+	public synchronized BufferedImage createMazeImage(){
 		if(maze!=null){
 			double tWidth = getWidth();
 			double tHeight = getHeight();
@@ -75,8 +84,9 @@ public class MazePanel extends JPanel {
 			tHeight=Math.floor(tHeight);
 			BufferedImage mazeImg = new BufferedImage((int)Math.floor(tWidth*maze.getWidth()), (int)Math.floor(tHeight*maze.getHeight()), BufferedImage.TYPE_INT_ARGB);
 			paintMaze(mazeImg.getGraphics());
-			g.drawImage(mazeImg,0, 0, getWidth(), getHeight(), null);
+			return mazeImg;
 		}
+		return null;
 	}
 
 	public void clearBackground(Graphics g){

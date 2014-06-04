@@ -35,7 +35,6 @@ public class MazeGeneratorFrame extends JFrame{
 	}
 
 	private void initGUI(){
-		//addComponentListener(this);
 		panel = new MazeGeneratorPanel();
 		add(panel);
 	}

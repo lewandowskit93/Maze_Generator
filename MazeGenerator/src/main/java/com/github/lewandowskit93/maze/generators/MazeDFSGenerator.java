@@ -122,7 +122,7 @@ public class MazeDFSGenerator implements MazeGenerator {
 		return unvisitedNeighbours;
 	}
 
-	public Direction getRandomUnvisitedNeighbours(int x, int y) {
+	public Direction getRandomUnvisitedNeighbour(int x, int y) {
 		EnumSet<Direction> unvisitedNeighbours = getUnvisitedNeighbours(x, y);
 		if(unvisitedNeighbours.size()==0)return null;
 		else return (Direction) unvisitedNeighbours.toArray()[numberGenerator.nextInt(unvisitedNeighbours.size())];
@@ -141,18 +141,12 @@ public class MazeDFSGenerator implements MazeGenerator {
 		if(!routeCoordinatesStack.empty()){
 			Coordinates2D coordinates = routeCoordinatesStack.pop();
 			visitCell(coordinates.getX(), coordinates.getY());
-			Direction direction = getRandomUnvisitedNeighbours(coordinates.getX(), coordinates.getY());
+			Direction direction = getRandomUnvisitedNeighbour(coordinates.getX(), coordinates.getY());
 			if(direction!=null){
 				routeCoordinatesStack.push(coordinates);
 				Coordinates2D neighbourCoordinates = maze.getNeighbourCoordinates(coordinates.getX(), coordinates.getY(), direction);
 				routeCoordinatesStack.push(neighbourCoordinates);
 				maze.removeWall(coordinates.getX(), coordinates.getY(), direction);
-			}
-			else{
-				if(!routeCoordinatesStack.empty()){
-					Coordinates2D previousCoordinates = routeCoordinatesStack.pop();
-					routeCoordinatesStack.push(previousCoordinates);
-				}
 			}
 		}
 	}
@@ -163,8 +157,7 @@ public class MazeDFSGenerator implements MazeGenerator {
 		Coordinates2D coordinates = null;
 		switch(toRemove){
 			case NORTH:{
-				coordinates = new Coordinates2D(numberGenerator.nextInt(width), 0);
-				
+				coordinates = new Coordinates2D(numberGenerator.nextInt(width), 0);				
 				break;
 			}
 			case EAST:{

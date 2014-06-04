@@ -16,8 +16,6 @@ public class MazeGeneratorApplet extends JApplet{
 	@Override
 	public void init() {
 		super.init();
-		//setBackground(Color.BLACK);
-		//setSize(800,600);
 		SwingUtilities.invokeLater(new Runnable(){
 			@Override
 			public void run(){
@@ -28,7 +26,6 @@ public class MazeGeneratorApplet extends JApplet{
 	}
 	
 	private void initGUI(){
-		//addComponentListener(this);
 		panel = new MazeGeneratorPanel();
 		add(panel);
 	}

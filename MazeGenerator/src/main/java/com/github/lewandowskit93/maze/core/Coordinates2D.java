@@ -1,6 +1,6 @@
 package com.github.lewandowskit93.maze.core;
 
-public class Coordinates2D {
+public class Coordinates2D implements Cloneable{
 	
 	private int x,y;
 	
@@ -36,5 +36,10 @@ public class Coordinates2D {
 		Coordinates2D other = (Coordinates2D) obj;
 		if(x!=other.x || y!=other.y)return false;
 		return true;
+	}
+	
+	@Override
+	public Coordinates2D clone(){
+		return new Coordinates2D(x,y);
 	}
 }

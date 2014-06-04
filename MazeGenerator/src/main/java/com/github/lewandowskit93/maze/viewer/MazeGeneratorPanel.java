@@ -14,7 +14,6 @@ import java.util.HashMap;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
 
 import com.github.lewandowskit93.maze.core.Direction;
 import com.github.lewandowskit93.maze.core.Maze;
@@ -29,6 +28,7 @@ public class MazeGeneratorPanel extends JPanel implements MazeTilesLoader, Compo
 	private MazeViewerPanel mazeViewerPanel;
 	private MenuPanel menuPanel;
 	private JPanel panel;
+	private boolean generatingMaze;
 	
 	
 	
@@ -44,26 +44,44 @@ public class MazeGeneratorPanel extends JPanel implements MazeTilesLoader, Compo
 
 	private void initGUI(){
 		addComponentListener(this);
-		//setLayout(null);
-		mazeViewerPanel = new MazeViewerPanel((int)Math.floor(getWidth()*0.8),(int)Math.floor(getHeight()));
-		mazeViewerPanel.getMazePanel().setMaze(null);
-		mazeViewerPanel.getMazePanel().setMazeTiles(loadTiles());
-		
-		menuPanel = new MenuPanel((int)Math.floor(getWidth()*0.2),(int)Math.floor(getHeight()));
+		setLayout(null);
 		panel = new JPanel();
 		panel.setLayout(new BoxLayout(panel,BoxLayout.LINE_AXIS));
 		add(panel);
+		
+		mazeViewerPanel = new MazeViewerPanel((int)Math.floor(getWidth()*0.8),(int)Math.floor(getHeight()));
+		menuPanel = new MenuPanel((int)Math.floor(getWidth()*0.2),(int)Math.floor(getHeight()));	
 		panel.add(mazeViewerPanel);
 		panel.add(menuPanel);
+		
+		mazeViewerPanel.getMazePanel().setMazeTiles(loadTiles());
 		mazeViewerPanel.setMinimumSize(new Dimension((int)Math.floor(getWidth()*0.8),(int)Math.floor(getHeight())));
 		mazeViewerPanel.setPreferredSize(new Dimension((int)Math.floor(getWidth()*0.8),(int)Math.floor(getHeight())));
 		mazeViewerPanel.setMaximumSize(new Dimension((int)Math.floor(getWidth()*0.8),(int)Math.floor(getHeight())));
 		mazeViewerPanel.setBorder(BorderFactory.createRaisedBevelBorder());
+		
+		
 		menuPanel.setMinimumSize(new Dimension(10,getHeight()));
 		menuPanel.setPreferredSize(new Dimension((int)Math.min(Math.floor(getWidth()*0.2),200),(int)Math.floor(getHeight())));
 		menuPanel.setMaximumSize(new Dimension(200,getHeight()));
 		menuPanel.setBorder(BorderFactory.createRaisedBevelBorder());
 		menuPanel.getGenerateMazeButton().addActionListener(this);
+	}
+	
+	public synchronized boolean isGeneratingMaze(){
+		return generatingMaze;
+	}
+	
+	public synchronized void setGeneratingMaze(boolean generatingMaze){
+		this.generatingMaze=generatingMaze;
+	}
+	
+	public synchronized boolean tryStartGeneratingMaze(){
+		if(!generatingMaze){
+			generatingMaze=true;
+			return true;
+		}
+		else return false;
 	}
 
 	@Override
@@ -130,24 +148,6 @@ public class MazeGeneratorPanel extends JPanel implements MazeTilesLoader, Compo
 		// TODO Auto-generated method stub
 		
 	}
-	
-	private boolean generatingMaze;
-	
-	public synchronized boolean isGeneratingMaze(){
-		return generatingMaze;
-	}
-	
-	public synchronized void setGeneratingMaze(boolean generatingMaze){
-		this.generatingMaze=generatingMaze;
-	}
-	
-	public synchronized boolean tryStartGeneratingMaze(){
-		if(!generatingMaze){
-			generatingMaze=true;
-			return true;
-		}
-		else return false;
-	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
@@ -164,27 +164,9 @@ public class MazeGeneratorPanel extends JPanel implements MazeTilesLoader, Compo
 						public void run() {
 							MazeDFSGenerator generator = new MazeDFSGenerator(width, height);
 							Maze maze = generator.generateMaze();
-							SwingUtilities.invokeLater(new Runnable(){
-								
-								private Maze maze;
-								private MazePanel panel;
-								private MazeGeneratorPanel generatorPanel;
-								
-								@Override
-								public void run(){
-									panel.setMaze(maze);
-									panel.repaint();
-									generatorPanel.setGeneratingMaze(false);
-								}
-								
-								public Runnable init(Maze maze, MazePanel panel, MazeGeneratorPanel generatorPanel){
-									this.maze=maze;
-									this.panel=panel;
-									this.generatorPanel=generatorPanel;
-									return this;
-								}
-								
-							}.init(maze,panel,generatorPanel));
+							panel.setMaze(maze);
+							panel.repaint();
+							generatorPanel.setGeneratingMaze(false);
 						}
 						
 						public Runnable init(int width, int height, MazePanel panel, MazeGeneratorPanel generatorPanel){

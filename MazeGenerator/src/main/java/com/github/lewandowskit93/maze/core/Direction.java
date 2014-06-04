@@ -5,7 +5,7 @@ import java.util.EnumSet;
 public enum Direction {
 	NORTH,EAST,SOUTH,WEST;
 	
-	public static final EnumSet<Direction> getFromIntValue(int value) throws IllegalArgumentException{
+	public static EnumSet<Direction> getFromIntValue(int value) throws IllegalArgumentException{
 		validateRangeFor(value);
 		EnumSet<Direction> set = EnumSet.noneOf(Direction.class);
 		for(Direction direction : Direction.values()){
@@ -17,7 +17,7 @@ public enum Direction {
 		return set;
 	}
 	
-	private static final void validateRangeFor(int value) throws IllegalArgumentException{
+	private static void validateRangeFor(int value) throws IllegalArgumentException{
 		int begin = getRangeBegin();
 		int end = getRangeEnd();
 		if(value < 0 || value > end){
@@ -27,11 +27,11 @@ public enum Direction {
 		}
 	}
 	
-	private static final int getRangeBegin(){
+	private static int getRangeBegin(){
 		return 0;
 	}
 	
-	private static final int getRangeEnd(){
+	private static int getRangeEnd(){
 		return (int)Math.pow(2, Direction.values().length)-1;
 	}
 
